@@ -1,0 +1,19 @@
+[package]
+name = "rfp005_testnet"
+version = "0.1.0"
+edition = "2024"
+license = { workspace = true }
+publish = false
+
+[dependencies]
+lee = { workspace = true }
+lee_core = { workspace = true, features = ["host"] }
+common.workspace = true
+sequencer_service_rpc = { workspace = true, features = ["client"] }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+anyhow.workspace = true
+borsh.workspace = true
+hex.workspace = true
+rand.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true

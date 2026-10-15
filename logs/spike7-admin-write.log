@@ -1,0 +1,38 @@
+warning: lee@0.1.0: Generated module at lez-stock/target/release/build/lee-75a56009fe6d94e4/out/lee/privacy_preserving_circuit/mod.rs
+   Compiling test_methods v0.1.0 (lez-stock/lee/state_machine/test_methods)
+   Compiling lee v0.1.0 (lez-stock/lee/state_machine)
+    Finished `release` profile [optimized] target(s) in 5.44s
+     Running unittests src/lib.rs (target/release/deps/lee-94ea962c09b2afde)
+
+running 1 test
+test state::tests::rfp005_spike::rfp005_admin_write_real has been running for over 60 seconds
+RFP005 admin write prove_time=297.203259876s proof_bytes=224743 tx_bytes=226354
+RFP005   public_actions=1 private_actions=1
+RFP005   admin write settled
+test state::tests::rfp005_spike::rfp005_admin_write_real ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 288 filtered out; finished in 297.26s
+
+	Command being timed: "cargo test --release -p lee --lib state::tests::rfp005_spike::rfp005_admin_write_real -- --exact --nocapture"
+	User time (seconds): 4077.03
+	System time (seconds): 27.62
+	Percent of CPU this job got: 1355%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:02.77
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 9599424
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 228
+	Minor (reclaiming a frame) page faults: 7643714
+	Voluntary context switches: 39424
+	Involuntary context switches: 2159287
+	Swaps: 0
+	File system inputs: 74808
+	File system outputs: 393544
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

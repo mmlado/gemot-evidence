@@ -1,0 +1,165 @@
+ Downloading crates ...
+  Downloaded hex-literal v1.1.0
+  Downloaded test-case-core v3.3.1
+  Downloaded test-case v3.3.1
+  Downloaded test-case-macros v3.3.1
+   Compiling test-case-core v3.3.1
+   Compiling hex-literal v1.1.0
+   Compiling lee_core v0.1.0 (lez-stock/lee/state_machine/core)
+   Compiling test_methods v0.1.0 (lez-stock/lee/state_machine/test_methods)
+warning: lee@0.1.0: Generated module at lez-stock/target/release/build/lee-75a56009fe6d94e4/out/lee/privacy_preserving_circuit/mod.rs
+   Compiling test-case-macros v3.3.1
+   Compiling test-case v3.3.1
+   Compiling test_guest_core v0.1.0 (lez-stock/test_guest_core)
+   Compiling program_loader_core v0.1.0 (lez-stock/lez/programs/program_loader/core)
+   Compiling lee v0.1.0 (lez-stock/lee/state_machine)
+    Finished `release` profile [optimized] target(s) in 28.26s
+     Running unittests src/lib.rs (target/release/deps/lee-937413ad6fd068a3)
+
+running 26 tests
+test privacy_preserving_transaction::circuit::tests::private_pda_update_identifier_mismatch_fails ... ok
+test privacy_preserving_transaction::circuit::tests::private_pda_init_identifier_mismatch_fails ... ok
+test privacy_preserving_transaction::circuit::tests::regular_update_with_wrong_ask_nsk_is_rejected ... ok
+test state::tests::circuit::private_pda_npk_mismatch_fails ... ok
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+test state::tests::chained_calls::a_pda_seed_delegated_to_one_sibling_does_not_leak_to_another ... ok
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+
+thread 'main' (1) panicked at lee/state_machine/test_methods/guest/src/bin/auth_asserting_noop.rs:15:9:
+auth_asserting_noop: 3yCEsvCooytazWhe2ngqyJdPLnqAaDkgabREuCKR9vuK is not authorized
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test privacy_preserving_transaction::circuit::tests::a_signer_entry_does_not_authorize_a_private_pda ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+
+thread 'main' (1) panicked at lee/state_machine/test_methods/guest/src/bin/auth_asserting_noop.rs:15:9:
+auth_asserting_noop: EZEahf33uBLAwuRaAhiCxGMKn44QRGzAAd2J6MYL4qtU is not authorized
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::caller_pda_seeds_with_wrong_seed_rejects_private_pda_for_callee ... ok
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+
+thread 'main' (1) panicked at lee/state_machine/test_methods/guest/src/bin/auth_asserting_noop.rs:15:9:
+auth_asserting_noop: BkWiioHa3rrTB47enwhcH3va3wT9qsCmRrf3JBaNmnr8 is not authorized
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test state::tests::circuit::delegated_pda_is_not_authorized_in_sibling_call ... ok
+
+thread 'main' (1) panicked at lee/state_machine/test_methods/guest/src/bin/auth_asserting_noop.rs:15:9:
+auth_asserting_noop: 7Cw1CBbg629PKXHBvLA3tHWm8VcDJzk2uXKWdVC9W1nZ is not authorized
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test state::tests::circuit::public_pda_first_sight_grant_does_not_extend_to_sibling_calls ... ok
+test state::tests::circuit::two_private_pdas_bound_under_same_seed_are_rejected ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test privacy_preserving_transaction::circuit::tests::private_authorized_update_encrypts_regular_kind_with_identifier ... ok
+test privacy_preserving_transaction::circuit::tests::private_regular_update_without_ask_is_spendable ... ok
+test privacy_preserving_transaction::circuit::tests::update_note_view_tag_is_the_supplied_value ... ok
+test privacy_preserving_transaction::circuit::tests::private_pda_withdraw ... ok
+test state::tests::circuit::private_pda_witness_binding_succeeds ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::a_wrong_seed_leaves_a_signer_public_pda_on_its_credential ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test privacy_preserving_transaction::circuit::tests::private_pda_with_custom_identifier_encrypts_correct_kind ... ok
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test privacy_preserving_transaction::circuit::tests::private_pda_update_encrypts_pda_kind_with_identifier ... ok
+test state::tests::deploy::update_header_flip_to_immutable_lands_immutable_mirror_commitment ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::shadow_program_claims_a_private_pda_it_legitimately_owns ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::a_delegated_public_pda_is_authorized_in_the_callee_but_exported_unauthorized ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::a_private_pda_echoed_unauthorized_at_the_root_is_granted_to_the_callee_by_its_seed ... ok
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::caller_pda_seeds_authorize_private_pda_for_callee ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::delegated_pda_stays_authorized_in_delegated_subtree ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::sibling_call_may_declare_delegated_pda_unauthorized ... ok
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+WARNING: proving in dev mode. This will not generate valid, secure proofs.
+WARNING: Proving in dev mode does not generate a valid receipt. Receipts generated from this process are invalid and should never be used in production.
+test state::tests::circuit::two_private_pda_family_members_receive_and_spend ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.58s
+
+exit 0

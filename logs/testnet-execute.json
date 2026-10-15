@@ -1,0 +1,21 @@
+{
+  "amount": "300000000",
+  "block": 14439,
+  "claims": "[Undisclosed { root: [15, 143, 91, 211, 191, 139, 108, 5, 38, 218, 52, 134, 207, 2, 214, 35, 16, 251, 255, 9, 80, 130, 238, 27, 55, 244, 102, 89, 43, 40, 146, 95] }]",
+  "image_id": "[1255063058, 2510395794, 1446092836, 3882876334, 1507724944, 3580373334, 3305142283, 3529154308]",
+  "message": "162dc2cff03fc868958c3a9b95b37497701467cd437d56ec40725f3b6f905a39",
+  "notes": 7,
+  "program": "FyAmXsAJSYL7fB9ALgSYrmPREWZd5eB7FemQhcdwVEoQ",
+  "proof_bytes": 235143,
+  "prove_seconds": 922.937672068,
+  "recipient": "2GMVCqmujM1cU4eeW2CPpJo1fTiepxPmykLPRgf21uWg",
+  "recipient_commitment_found": true,
+  "signatures": 7,
+  "tx": "5eef1979c2058a56b9d3f075d70cea79b5dc84d0780089682c0e8b8ca6d9de9c",
+  "tx_bytes": 247155,
+  "vault": "CDjsB56rqU6ydtkBUzmdmGWyMYWJSPUmHZ86q91egMXz",
+  "window_ms": [
+    1792039546017,
+    1792050406017
+  ]
+}

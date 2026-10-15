@@ -1,0 +1,122 @@
+[
+  {
+    "scheme": "schnorr",
+    "m": 1,
+    "phase": "plan",
+    "user_cycles": 5693770,
+    "segments": 6,
+    "share_of_limit": 0.16968756914138794,
+    "exec_ms": 138.31496900000002,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 1,
+    "phase": "apply",
+    "user_cycles": 7941,
+    "segments": 1,
+    "share_of_limit": 0.00023666024208068848,
+    "exec_ms": 27.797128,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 2,
+    "phase": "plan",
+    "user_cycles": 11377231,
+    "segments": 12,
+    "share_of_limit": 0.33906790614128113,
+    "exec_ms": 228.597525,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 2,
+    "phase": "apply",
+    "user_cycles": 7941,
+    "segments": 1,
+    "share_of_limit": 0.00023666024208068848,
+    "exec_ms": 29.613248,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 3,
+    "phase": "plan",
+    "user_cycles": 17060752,
+    "segments": 18,
+    "share_of_limit": 0.5084500312805176,
+    "exec_ms": 331.808457,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 3,
+    "phase": "apply",
+    "user_cycles": 7941,
+    "segments": 1,
+    "share_of_limit": 0.00023666024208068848,
+    "exec_ms": 28.099411,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 5,
+    "phase": "plan",
+    "user_cycles": 28427816,
+    "segments": 29,
+    "share_of_limit": 0.847214937210083,
+    "exec_ms": 514.105289,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 5,
+    "phase": "apply",
+    "user_cycles": 7941,
+    "segments": 1,
+    "share_of_limit": 0.00023666024208068848,
+    "exec_ms": 27.556902,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 7,
+    "phase": "plan",
+    "user_cycles": 39794926,
+    "segments": 40,
+    "share_of_limit": 1.1859812140464783,
+    "exec_ms": 706.946802,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 7,
+    "phase": "apply",
+    "user_cycles": 7941,
+    "segments": 1,
+    "share_of_limit": 0.00023666024208068848,
+    "exec_ms": 28.458611,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  }
+]

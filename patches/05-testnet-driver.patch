@@ -1,0 +1,827 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index 2bf5ff6ce..9419265f4 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -2189,10 +2189,10 @@ checksum = "460fbee9c2c2f33933d720630a6a0bac33ba7053db5344fac858d4b8952d77d5"
+ [[package]]
+ name = "crypto-bigint"
+ version = "0.5.5"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "0dc92fb57ca44df6db8059111ab3af99a63d5d0f8375d9972e319a379c6bab76"
++source = "git+https://github.com/risc0/RustCrypto-crypto-bigint?tag=v0.5.5-risczero.0#3ab63a6f1048833f7047d5a50532e4a4cc789384"
+ dependencies = [
+  "generic-array 0.14.7",
++ "getrandom 0.2.17",
+  "rand_core 0.6.4",
+  "subtle",
+  "zeroize",
+@@ -2345,14 +2345,15 @@ dependencies = [
+ [[package]]
+ name = "curve25519-dalek"
+ version = "4.1.3"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "97fb8b7c4503de7d6ae7b42ab72a5a59857b4c937ec27a3d4539dba95b5ab2be"
++source = "git+https://github.com/risc0/curve25519-dalek?tag=curve25519-4.1.3-risczero.0#385adda1fa3b66d9aaa8b8fcc99ddc324d33ba32"
+ dependencies = [
+  "cfg-if",
+  "cpufeatures 0.2.17",
++ "crypto-bigint 0.5.5",
+  "curve25519-dalek-derive",
+  "digest 0.10.7",
+  "fiat-crypto",
++ "hex",
+  "rustc_version",
+  "serde",
+  "subtle",
+@@ -2362,8 +2363,7 @@ dependencies = [
+ [[package]]
+ name = "curve25519-dalek-derive"
+ version = "0.1.1"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "f46882e17999c6cc590af592290432be3bce0428cb0d5f8b6715e4dc7b383eb3"
++source = "git+https://github.com/risc0/curve25519-dalek?tag=curve25519-4.1.3-risczero.0#385adda1fa3b66d9aaa8b8fcc99ddc324d33ba32"
+ dependencies = [
+  "proc-macro2",
+  "quote",
+@@ -5265,13 +5265,14 @@ dependencies = [
+ [[package]]
+ name = "k256"
+ version = "0.13.4"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "f6e3919bbaa2945715f0bb6d3934a173d1e9a59ac23767fbaaef277265a7411b"
++source = "git+https://github.com/risc0/RustCrypto-elliptic-curves?tag=k256%2Fv0.13.4-risczero.1#7d4a8d6477e258ce4169ee4669cf92aee0582c39"
+ dependencies = [
++ "bytemuck",
+  "cfg-if",
+  "ecdsa 0.16.9",
+  "elliptic-curve 0.13.8",
+  "once_cell",
++ "risc0-bigint2",
+  "serdect 0.2.0",
+  "sha2 0.10.9",
+  "signature 2.2.0",
+@@ -10174,6 +10175,23 @@ dependencies = [
+  "hmac 0.13.0",
+ ]
+ 
++[[package]]
++name = "rfp005_testnet"
++version = "0.1.0"
++dependencies = [
++ "anyhow",
++ "borsh",
++ "common",
++ "hex",
++ "lee",
++ "lee_core",
++ "rand 0.8.6",
++ "sequencer_service_rpc",
++ "serde",
++ "serde_json",
++ "tokio",
++]
++
+ [[package]]
+ name = "ring"
+ version = "0.17.14"
+@@ -10194,6 +10212,16 @@ version = "0.15.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "3df6368f71f205ff9c33c076d170dd56ebf68e8161c733c0caa07a7a5509ed53"
+ 
++[[package]]
++name = "risc0-bigint2"
++version = "1.4.14"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "43d497a20f29fafe5c188025761a05a62b3903a6b62e2f3fa20d77d0ab387ad0"
++dependencies = [
++ "include_bytes_aligned",
++ "stability",
++]
++
+ [[package]]
+ name = "risc0-binfmt"
+ version = "3.0.4"
+@@ -11714,8 +11742,7 @@ dependencies = [
+ [[package]]
+ name = "sha2"
+ version = "0.10.9"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283"
++source = "git+https://github.com/risc0/RustCrypto-hashes?tag=sha2-v0.10.9-risczero.0#8631fabdea7bdffa97b11868e04e73491d8e5bcf"
+ dependencies = [
+  "cfg-if",
+  "cpufeatures 0.2.17",
+@@ -12457,6 +12484,8 @@ name = "test_guest_core"
+ version = "0.1.0"
+ dependencies = [
+  "borsh",
++ "ed25519-dalek",
++ "k256 0.13.4",
+  "lee_core",
+ ]
+ 
+diff --git a/Cargo.toml b/Cargo.toml
+index eee4c7746..cb10614d6 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -74,6 +74,7 @@ members = [
+   "test_fixtures",
+ 
+   "tools/cycle_bench",
++  "tools/rfp005_testnet",
+   "tools/crypto_primitives_bench",
+   "tools/integration_bench",
+   "tools/cross_zone_chat",
+@@ -272,6 +273,10 @@ codegen-units = 1
+ 
+ # Keccak speedup for in-guest ML KEM
+ [patch.crates-io]
++crypto-bigint = { git = "https://github.com/risc0/RustCrypto-crypto-bigint", tag = "v0.5.5-risczero.0" }
++curve25519-dalek = { git = "https://github.com/risc0/curve25519-dalek", tag = "curve25519-4.1.3-risczero.0" }
++sha2 = { git = "https://github.com/risc0/RustCrypto-hashes", tag = "sha2-v0.10.9-risczero.0" }
++k256 = { git = "https://github.com/risc0/RustCrypto-elliptic-curves", tag = "k256/v0.13.4-risczero.1" }
+ keccak = { git = "https://github.com/logos-blockchain/sponges", rev = "3a56e99771beedf04946eab21a4a62adc2951377" }
+ 
+ # Keep backtraces but drop full DWARF type info to avoid LLD OOM/SIGBUS when
+diff --git a/lee/state_machine/test_methods/guest/src/bin/rfp005_multisig_execute.rs b/lee/state_machine/test_methods/guest/src/bin/rfp005_multisig_execute.rs
+new file mode 100644
+index 000000000..2f258d1db
+--- /dev/null
++++ b/lee/state_machine/test_methods/guest/src/bin/rfp005_multisig_execute.rs
+@@ -0,0 +1,3 @@
++fn main() {
++    test_guest_core::guests::rfp005_multisig_execute();
++}
+diff --git a/test_guest_core/Cargo.toml b/test_guest_core/Cargo.toml
+index 289f9b03b..f569ef557 100644
+--- a/test_guest_core/Cargo.toml
++++ b/test_guest_core/Cargo.toml
+@@ -10,3 +10,5 @@ workspace = true
+ [dependencies]
+ borsh.workspace = true
+ lee_core.workspace = true
++ed25519-dalek.workspace = true
++k256.workspace = true
+diff --git a/test_guest_core/src/guests.rs b/test_guest_core/src/guests.rs
+index f6c46ddee..4f9009db9 100644
+--- a/test_guest_core/src/guests.rs
++++ b/test_guest_core/src/guests.rs
+@@ -87,3 +87,137 @@ pub fn pda_spend_proxy() {
+     ));
+     plan.write();
+ }
++// Appended to test_guest_core/src/guests.rs. Verifies M ed25519 approvals over one
++// 32-byte message inside the guest, then writes M into the single account's data.
++
++#[derive(borsh::BorshSerialize, borsh::BorshDeserialize)]
++pub struct MultisigVerify {
++    pub message: [u8; 32],
++    pub approvals: Vec<Approval>,
++}
++
++#[derive(borsh::BorshSerialize, borsh::BorshDeserialize, Clone)]
++pub struct Approval {
++    pub public_key: [u8; 32],
++    pub signature: [u8; 64],
++}
++
++pub fn multisig_verify() {
++    match read_program_call::<MultisigVerify>() {
++        ProgramCall::Plan(input, instruction) => {
++            let Ok([account]) = <[_; 1]>::try_from(input.accounts.clone()) else {
++                panic!("multisig_verify requires exactly 1 account");
++            };
++            let mut seen: Vec<[u8; 32]> = Vec::with_capacity(instruction.approvals.len());
++            for approval in &instruction.approvals {
++                assert!(!seen.contains(&approval.public_key), "duplicate signer");
++                seen.push(approval.public_key);
++                let key = ed25519_dalek::VerifyingKey::from_bytes(&approval.public_key)
++                    .expect("valid public key");
++                let signature = ed25519_dalek::Signature::from_bytes(&approval.signature);
++                key.verify_strict(&instruction.message, &signature)
++                    .expect("approval signature verifies");
++            }
++            let count = u32::try_from(instruction.approvals.len()).expect("fits u32");
++            let effect = ShardEffect::new(&account, &count);
++            GuestOutput::Plan(PlanOutput::new(input).with_effects(vec![effect])).write();
++        }
++        ProgramCall::Apply(input) => {
++            let count: u32 = borsh::from_slice(&input.effect_data).expect("own effect");
++            let data = count
++                .to_le_bytes()
++                .to_vec()
++                .try_into()
++                .expect("4 bytes fit the data limit");
++            apply_write(input, data);
++        }
++    }
++}
++
++/// Same as `multisig_verify`, with BIP-340 Schnorr approvals on secp256k1 checked the way
++/// LEZ checks its own transaction signatures (`verify_prehash` over a 32-byte digest).
++pub fn multisig_verify_schnorr() {
++    use k256::ecdsa::signature::hazmat::PrehashVerifier as _;
++    match read_program_call::<MultisigVerify>() {
++        ProgramCall::Plan(input, instruction) => {
++            let Ok([account]) = <[_; 1]>::try_from(input.accounts.clone()) else {
++                panic!("multisig_verify_schnorr requires exactly 1 account");
++            };
++            let mut seen: Vec<[u8; 32]> = Vec::with_capacity(instruction.approvals.len());
++            for approval in &instruction.approvals {
++                assert!(!seen.contains(&approval.public_key), "duplicate signer");
++                seen.push(approval.public_key);
++                let key = k256::schnorr::VerifyingKey::from_bytes(&approval.public_key)
++                    .expect("valid x-only public key");
++                let signature = k256::schnorr::Signature::try_from(&approval.signature[..])
++                    .expect("valid signature encoding");
++                key.verify_prehash(&instruction.message, &signature)
++                    .expect("approval signature verifies");
++            }
++            let count = u32::try_from(instruction.approvals.len()).expect("fits u32");
++            let effect = ShardEffect::new(&account, &count);
++            GuestOutput::Plan(PlanOutput::new(input).with_effects(vec![effect])).write();
++        }
++        ProgramCall::Apply(input) => {
++            let count: u32 = borsh::from_slice(&input.effect_data).expect("own effect");
++            let data = count
++                .to_le_bytes()
++                .to_vec()
++                .try_into()
++                .expect("4 bytes fit the data limit");
++            apply_write(input, data);
++        }
++    }
++}
++
++/// RFP-005 spike: `accounts = [state, vault, recipient, recorded..]`. Verifies every approval,
++/// records the count and message in `state` and marks each recorded account, holds the action to a timestamp window, and moves `amount` out
++/// of the vault PDA derived under `vault_seed`.
++pub fn rfp005_multisig_execute() {
++    use k256::ecdsa::signature::hazmat::PrehashVerifier as _;
++    type Instruction = (MultisigVerify, PdaSeed, u128, u64, u64);
++    match read_program_call::<Instruction>() {
++        ProgramCall::Plan(input, (instruction, vault_seed, amount, not_before, not_after)) => {
++            let [state, vault, recipient, recorded @ ..] = input.accounts.as_slice() else {
++                panic!("rfp005_multisig_execute requires [state, vault, recipient, recorded..]");
++            };
++            let (state, vault, recipient, recorded) =
++                (state.clone(), vault.clone(), recipient.clone(), recorded.to_vec());
++            let mut seen: Vec<[u8; 32]> = Vec::with_capacity(instruction.approvals.len());
++            for approval in &instruction.approvals {
++                assert!(!seen.contains(&approval.public_key), "duplicate signer");
++                seen.push(approval.public_key);
++                let key = k256::schnorr::VerifyingKey::from_bytes(&approval.public_key)
++                    .expect("valid x-only public key");
++                let signature = k256::schnorr::Signature::try_from(&approval.signature[..])
++                    .expect("valid signature encoding");
++                key.verify_prehash(&instruction.message, &signature)
++                    .expect("approval signature verifies");
++            }
++            let count = u32::try_from(instruction.approvals.len()).expect("fits u32");
++            let mut plan = Plan::new(&input);
++            plan.effect(&state, &(count, instruction.message));
++            for account in &recorded {
++                plan.effect(account, &(0_u32, instruction.message));
++            }
++            plan.timestamp_window(
++                lee_core::program::TimestampValidityWindow::try_from(not_before..not_after)
++                    .expect("a non-empty window"),
++            );
++            plan.call(custody_transfer(
++                vault.account_id,
++                vault_seed,
++                recipient.account_id,
++                amount,
++            ));
++            plan.write();
++        }
++        ProgramCall::Apply(input) => {
++            let (count, message): (u32, [u8; 32]) =
++                borsh::from_slice(&input.effect_data).expect("own effect");
++            let mut data = count.to_le_bytes().to_vec();
++            data.extend_from_slice(&message);
++            apply_write(input, data.try_into().expect("fits the data limit"));
++        }
++    }
++}
+diff --git a/tools/rfp005_testnet/Cargo.toml b/tools/rfp005_testnet/Cargo.toml
+new file mode 100644
+index 000000000..285ef81fe
+--- /dev/null
++++ b/tools/rfp005_testnet/Cargo.toml
+@@ -0,0 +1,19 @@
++[package]
++name = "rfp005_testnet"
++version = "0.1.0"
++edition = "2024"
++license = { workspace = true }
++publish = false
++
++[dependencies]
++lee = { workspace = true }
++lee_core = { workspace = true, features = ["host"] }
++common.workspace = true
++sequencer_service_rpc = { workspace = true, features = ["client"] }
++tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
++anyhow.workspace = true
++borsh.workspace = true
++hex.workspace = true
++rand.workspace = true
++serde = { workspace = true, features = ["derive"] }
++serde_json.workspace = true
+diff --git a/tools/rfp005_testnet/src/main.rs b/tools/rfp005_testnet/src/main.rs
+new file mode 100644
+index 000000000..3ad305423
+--- /dev/null
++++ b/tools/rfp005_testnet/src/main.rs
+@@ -0,0 +1,490 @@
++//! RFP-005 spike: the whole M-of-5 multisig transaction, sent to a live LEZ sequencer.
++//!
++//! `init DIR` writes fresh keys. `fund DIR RPC HEADER AMOUNT` moves AMOUNT from the funder into
++//! the vault PDA. `execute DIR RPC ELF HEADER FIRST_SEGMENT VAULT_BALANCE AMOUNT` proves the
++//! wallet-shaped multisig transaction and submits it. `--dry-run` proves without submitting.
++
++use std::{
++    borrow::Cow,
++    collections::{HashMap, HashSet},
++    path::{Path, PathBuf},
++    time::{Duration, Instant},
++};
++
++use anyhow::{Context as _, Result, bail};
++use common::transaction::LeeTransaction;
++use lee::{
++    PrivacyPreservingTransaction, PrivateKey, ProvingInput, PublicKey, Signature,
++    execute_and_prove,
++    privacy_preserving_transaction::{
++        circuit::ProgramWithDependencies, message::Message, witness_set::WitnessSet,
++    },
++    program::Program,
++};
++use lee_core::{
++    AuthorizationSecretKey, Commitment, DummyInput, Identifier, MembershipProof,
++    NullifierPublicKey, NullifierSecretKey, NullifierWitness, PrivateWitness, SharedSecretKey,
++    WitnessKind,
++    account::{Account, AccountId, Nonce, ProgramShardSelector},
++    encryption::{Ciphertext, EncryptedAccountData, MlKem768EncapsulationKey, ViewingPublicKey},
++    native_token::Instruction as NativeInstruction,
++    program::{PdaSeed, ProgramHeader, immutable_mirror_commitment},
++};
++use rand::{RngCore as _, rngs::OsRng};
++use sequencer_service_rpc::{RpcClient as _, SequencerClient, SequencerClientBuilder};
++use serde::{Deserialize, Serialize};
++use serde_json::json;
++
++const PAD: u32 = 512;
++const MAX_PRIVATE: usize = 7;
++const SIGNATURES: usize = 7;
++
++#[derive(borsh::BorshSerialize)]
++struct Approval {
++    public_key: [u8; 32],
++    signature: [u8; 64],
++}
++
++#[derive(borsh::BorshSerialize)]
++struct MultisigVerify {
++    message: [u8; 32],
++    approvals: Vec<Approval>,
++}
++
++#[derive(Serialize, Deserialize)]
++struct PrivKeys {
++    ask: String,
++    d: String,
++    z: String,
++}
++
++impl PrivKeys {
++    fn random() -> Self {
++        Self {
++            ask: hex::encode(random32()),
++            d: hex::encode(random32()),
++            z: hex::encode(random32()),
++        }
++    }
++    fn ask(&self) -> AuthorizationSecretKey {
++        AuthorizationSecretKey(hex32(&self.ask))
++    }
++    fn nsk(&self) -> NullifierSecretKey {
++        (&self.ask()).into()
++    }
++    fn npk(&self) -> NullifierPublicKey {
++        NullifierPublicKey::from(&self.nsk())
++    }
++    fn vpk(&self) -> ViewingPublicKey {
++        ViewingPublicKey::from_seed(&hex32(&self.d), &hex32(&self.z))
++    }
++    fn regular_id(&self) -> AccountId {
++        AccountId::for_regular_private_account(&self.npk(), &self.vpk(), Identifier::ZERO)
++    }
++}
++
++#[derive(Serialize, Deserialize)]
++struct Keys {
++    funder: String,
++    approvers: Vec<String>,
++    state: PrivKeys,
++    group: PrivKeys,
++    recipient: PrivKeys,
++    vault_seed: String,
++}
++
++impl Keys {
++    fn funder(&self) -> PrivateKey {
++        PrivateKey::try_new(hex32(&self.funder)).expect("stored key is valid")
++    }
++    fn vault_seed(&self) -> PdaSeed {
++        PdaSeed::new(hex32(&self.vault_seed))
++    }
++    fn vault_id(&self, program_id: &AccountId) -> AccountId {
++        AccountId::for_private_pda(
++            program_id,
++            &self.vault_seed(),
++            &self.group.npk(),
++            &self.group.vpk(),
++            Identifier::ZERO,
++        )
++    }
++}
++
++fn hex32(s: &str) -> [u8; 32] {
++    hex::decode(s)
++        .expect("valid hex")
++        .try_into()
++        .expect("32 bytes")
++}
++
++fn random32() -> [u8; 32] {
++    let mut bytes = [0; 32];
++    OsRng.fill_bytes(&mut bytes);
++    bytes
++}
++
++fn random_signing_key() -> String {
++    loop {
++        let bytes = random32();
++        if PrivateKey::try_new(bytes).is_ok() {
++            return hex::encode(bytes);
++        }
++    }
++}
++
++fn account_of(key: &PrivateKey) -> AccountId {
++    AccountId::from(&PublicKey::new_from_private_key(key))
++}
++
++fn load_keys(dir: &Path) -> Result<Keys> {
++    let path = dir.join("keys.json");
++    serde_json::from_slice(&std::fs::read(&path).with_context(|| format!("{}", path.display()))?)
++        .context("keys.json")
++}
++
++fn load_program(elf: &Path) -> Result<Program> {
++    Program::new(Cow::Owned(std::fs::read(elf)?)).map_err(|e| anyhow::anyhow!("{e:?}"))
++}
++
++fn dummies(count: usize, root: lee_core::CommitmentSetDigest) -> Vec<DummyInput> {
++    (0..count)
++        .map(|_| {
++            let (_, epk) = SharedSecretKey::encapsulate(&MlKem768EncapsulationKey::from_seed(
++                &random32(),
++                &random32(),
++            ));
++            let mut ciphertext = vec![0; PAD as usize];
++            OsRng.fill_bytes(&mut ciphertext);
++            DummyInput {
++                nullifier_seed: random32(),
++                commitment_seed: random32(),
++                note: EncryptedAccountData {
++                    ciphertext: Ciphertext::from_inner(ciphertext),
++                    epk,
++                    view_tag: OsRng.next_u32() as u8,
++                },
++                commitment_root: root,
++            }
++        })
++        .collect()
++}
++
++fn init_regular(keys: &PrivKeys, root: lee_core::CommitmentSetDigest) -> PrivateWitness {
++    PrivateWitness {
++        vpk: keys.vpk(),
++        random_seed: random32(),
++        identifier: Identifier::ZERO,
++        kind: WitnessKind::Regular {
++            ask: Some(keys.ask()),
++        },
++        nullifier: NullifierWitness::Init {
++            npk: keys.npk(),
++            commitment_root: root,
++        },
++    }
++}
++
++fn init_pda(
++    keys: &PrivKeys,
++    binding: (AccountId, PdaSeed),
++    root: lee_core::CommitmentSetDigest,
++) -> PrivateWitness {
++    PrivateWitness {
++        vpk: keys.vpk(),
++        random_seed: random32(),
++        identifier: Identifier::ZERO,
++        kind: WitnessKind::Pda { binding },
++        nullifier: NullifierWitness::Init {
++            npk: keys.npk(),
++            commitment_root: root,
++        },
++    }
++}
++
++fn update_pda(
++    keys: &PrivKeys,
++    binding: (AccountId, PdaSeed),
++    account: Account,
++    membership_proof: MembershipProof,
++) -> PrivateWitness {
++    PrivateWitness {
++        vpk: keys.vpk(),
++        random_seed: random32(),
++        identifier: Identifier::ZERO,
++        kind: WitnessKind::Pda { binding },
++        nullifier: NullifierWitness::Update {
++            account,
++            view_tag: OsRng.next_u32() as u8,
++            nsk: keys.nsk(),
++            membership_proof,
++        },
++    }
++}
++
++fn private_account(id: &AccountId, balance: u128) -> Account {
++    Account {
++        nonce: Nonce::private_account_nonce_init(id),
++        ..Account::funded(balance)
++    }
++}
++
++async fn prove(
++    input: ProvingInput,
++    deps: ProgramWithDependencies,
++) -> Result<(lee_core::PrivacyPreservingCircuitOutput, lee::privacy_preserving_transaction::circuit::Proof, Duration)> {
++    tokio::task::spawn_blocking(move || {
++        let started = Instant::now();
++        let (output, proof) = execute_and_prove(input, &deps).map_err(|e| anyhow::anyhow!("{e:?}"))?;
++        Ok((output, proof, started.elapsed()))
++    })
++    .await?
++}
++
++async fn submit(
++    client: &SequencerClient,
++    tx: PrivacyPreservingTransaction,
++) -> Result<(String, u64)> {
++    let hash = client
++        .send_transaction(LeeTransaction::PrivacyPreserving(tx))
++        .await
++        .context("sequencer refused the transaction")?;
++    let hash_text = format!("{hash}");
++    eprintln!("submitted {hash_text}");
++    for _ in 0..120 {
++        match client.get_transaction(hash).await {
++            Ok(Some((_, block_id))) => {
++                eprintln!("included in block {block_id}");
++                return Ok((hash_text, block_id));
++            }
++            Ok(None) => {}
++            Err(e) => eprintln!("poll failed, retrying: {e}"),
++        }
++        tokio::time::sleep(Duration::from_secs(5)).await;
++    }
++    bail!("{hash_text} not included after ten minutes")
++}
++
++async fn require_commitment(client: &SequencerClient, what: &str, c: Commitment) -> Result<MembershipProof> {
++    let (proofs, _) = client.get_proofs_and_root(vec![c]).await?;
++    proofs
++        .into_iter()
++        .next()
++        .flatten()
++        .with_context(|| format!("{what}: commitment not in the chain's commitment set"))
++}
++
++fn write_result(dir: &Path, name: &str, value: &serde_json::Value) -> Result<()> {
++    let out = dir.join("results");
++    std::fs::create_dir_all(&out)?;
++    std::fs::write(out.join(format!("{name}.json")), serde_json::to_vec_pretty(value)?)?;
++    println!("{}", serde_json::to_string_pretty(value)?);
++    Ok(())
++}
++
++fn tx_sizes(tx: &PrivacyPreservingTransaction) -> (usize, usize) {
++    (
++        tx.witness_set.proof().clone().into_inner().len(),
++        borsh::to_vec(tx).expect("serializes").len(),
++    )
++}
++
++async fn fund(dir: &Path, client: &SequencerClient, header_id: AccountId, amount: u128, dry_run: bool) -> Result<()> {
++    let keys = load_keys(dir)?;
++    let funder_key = keys.funder();
++    let funder_id = account_of(&funder_key);
++    let vault_id = keys.vault_id(&header_id);
++    let (_, root) = client.get_proofs_and_root(vec![]).await?;
++    eprintln!("funder {funder_id}, vault {vault_id}");
++
++    let input = ProvingInput {
++        shard_selectors: vec![
++            ProgramShardSelector::native_balance(funder_id),
++            ProgramShardSelector::native_balance(vault_id),
++        ],
++        signers: HashSet::from([funder_id]),
++        private_witnesses: vec![init_pda(&keys.group, (header_id, keys.vault_seed()), root)],
++        instruction_data: Program::serialize_instruction(NativeInstruction::Transfer { amount })
++            .map_err(|e| anyhow::anyhow!("{e:?}"))?,
++        dummy_inputs: dummies(MAX_PRIVATE - 1, root),
++        ciphertext_padding: Some(PAD),
++    };
++    let (output, proof, elapsed) = prove(input, ProgramWithDependencies::native()).await?;
++    // The public nonce is outside the proof, so it is read after proving to survive reorgs.
++    let funder = client.get_account(funder_id).await?;
++    eprintln!("funder nonce {:?}", funder.nonce);
++    let message = Message::from_circuit_output(vec![funder.nonce], output);
++    let witness_set = WitnessSet::for_message(&message, proof, &[&funder_key]);
++    let tx = PrivacyPreservingTransaction::new(message, witness_set);
++    let (proof_bytes, tx_bytes) = tx_sizes(&tx);
++    eprintln!("fund proved in {elapsed:?}, proof {proof_bytes} B, tx {tx_bytes} B");
++    if dry_run {
++        return Ok(());
++    }
++    let (hash, block) = submit(client, tx).await?;
++    let vault_found = require_commitment(client, "vault", Commitment::new(&vault_id, &private_account(&vault_id, amount))).await.is_ok();
++    write_result(dir, "fund", &json!({
++        "tx": hash, "block": block, "vault_commitment_found": vault_found, "vault": vault_id.to_string(), "amount": amount.to_string(),
++        "prove_seconds": elapsed.as_secs_f64(), "proof_bytes": proof_bytes, "tx_bytes": tx_bytes,
++    }))
++}
++
++#[expect(clippy::too_many_arguments, reason = "one-off driver")]
++async fn execute(
++    dir: &Path,
++    client: &SequencerClient,
++    elf: &Path,
++    header_id: AccountId,
++    first_segment: AccountId,
++    vault_balance: u128,
++    amount: u128,
++    dry_run: bool,
++) -> Result<()> {
++    let keys = load_keys(dir)?;
++    let program = load_program(elf)?;
++    let header = ProgramHeader {
++        image_id: program.id(),
++        program_first_segment: first_segment,
++        immutable: true,
++    };
++    let vault_id = keys.vault_id(&header_id);
++    let vault_account = private_account(&vault_id, vault_balance);
++    let (proofs, root) = client
++        .get_proofs_and_root(vec![
++            immutable_mirror_commitment(header_id, &header),
++            Commitment::new(&vault_id, &vault_account),
++        ])
++        .await?;
++    let mut proofs = proofs.into_iter();
++    let mirror_proof = proofs.next().flatten().context("immutable header mirror not in the commitment set")?;
++    let vault_proof = proofs.next().flatten().context("vault commitment not in the commitment set")?;
++
++    let last = client.get_last_block_id().await?;
++    let now = client
++        .get_block(last)
++        .await?
++        .context("last block")?
++        .header
++        .timestamp;
++    let (not_before, not_after) = (now - 60_000, now + 3 * 3_600_000);
++
++    let proposal = random32();
++    let approvals = keys
++        .approvers
++        .iter()
++        .take(SIGNATURES)
++        .map(|k| {
++            let key = PrivateKey::try_new(hex32(k)).expect("stored key is valid");
++            Approval {
++                public_key: *PublicKey::new_from_private_key(&key).value(),
++                signature: Signature::new(&key, &proposal).value,
++            }
++        })
++        .collect();
++    let instruction = (
++        MultisigVerify {
++            message: proposal,
++            approvals,
++        },
++        keys.vault_seed(),
++        amount,
++        not_before,
++        not_after,
++    );
++
++    let state_id = keys.state.regular_id();
++    let recipient_id = keys.recipient.regular_id();
++    let input = ProvingInput {
++        shard_selectors: vec![
++            ProgramShardSelector::new(state_id, header_id),
++            ProgramShardSelector::native_balance(vault_id),
++            ProgramShardSelector::native_balance(recipient_id),
++        ],
++        signers: HashSet::new(),
++        private_witnesses: vec![
++            init_regular(&keys.state, root),
++            update_pda(&keys.group, (header_id, keys.vault_seed()), vault_account, vault_proof),
++            init_regular(&keys.recipient, root),
++        ],
++        instruction_data: Program::serialize_instruction(instruction)
++            .map_err(|e| anyhow::anyhow!("{e:?}"))?,
++        dummy_inputs: dummies(MAX_PRIVATE - 3, root),
++        ciphertext_padding: Some(PAD),
++    };
++    let deps = ProgramWithDependencies::new(program, header_id, HashMap::new())
++        .as_undisclosed_program(header, mirror_proof);
++    eprintln!("proving the M of 5 transaction, {SIGNATURES} signatures, window {not_before}..{not_after}");
++    let (output, proof, elapsed) = prove(input, deps).await?;
++    let message = Message::from_circuit_output(vec![], output);
++    let witness_set = WitnessSet::for_message(&message, proof, &[]);
++    let tx = PrivacyPreservingTransaction::new(message, witness_set);
++    let (proof_bytes, tx_bytes) = tx_sizes(&tx);
++    let claims = format!("{:?}", tx.message.program_image_claims);
++    let notes = tx.message.private_actions.len();
++    eprintln!("execute proved in {elapsed:?}, proof {proof_bytes} B, tx {tx_bytes} B, notes {notes}, claims {claims}");
++    if dry_run {
++        return Ok(());
++    }
++    let (hash, block) = submit(client, tx).await?;
++    let recipient_found = require_commitment(client, "recipient", Commitment::new(&recipient_id, &private_account(&recipient_id, amount))).await.is_ok();
++    write_result(dir, "execute", &json!({
++        "tx": hash, "block": block, "recipient_commitment_found": recipient_found, "program": header_id.to_string(), "image_id": format!("{:?}", header.image_id),
++        "vault": vault_id.to_string(), "recipient": recipient_id.to_string(), "amount": amount.to_string(),
++        "signatures": SIGNATURES, "message": hex::encode(proposal),
++        "window_ms": [not_before, not_after], "notes": notes, "claims": claims,
++        "prove_seconds": elapsed.as_secs_f64(), "proof_bytes": proof_bytes, "tx_bytes": tx_bytes,
++    }))
++}
++
++fn main() -> Result<()> {
++    let args: Vec<String> = std::env::args().skip(1).collect();
++    let dry_run = args.iter().any(|a| a == "--dry-run");
++    let args: Vec<&str> = args.iter().filter(|a| *a != "--dry-run").map(String::as_str).collect();
++    let client = |url: &str| -> Result<SequencerClient> { Ok(SequencerClientBuilder::default().build(url)?) };
++    let rt = tokio::runtime::Runtime::new()?;
++    match args.as_slice() {
++        ["init", dir] => {
++            let dir = PathBuf::from(dir);
++            std::fs::create_dir_all(&dir)?;
++            let path = dir.join("keys.json");
++            if !path.exists() {
++                let keys = Keys {
++                    funder: random_signing_key(),
++                    approvers: (0..SIGNATURES).map(|_| random_signing_key()).collect(),
++                    state: PrivKeys::random(),
++                    group: PrivKeys::random(),
++                    recipient: PrivKeys::random(),
++                    vault_seed: hex::encode(random32()),
++                };
++                std::fs::write(&path, serde_json::to_vec_pretty(&keys)?)?;
++            }
++            let keys = load_keys(&dir)?;
++            println!("funder Public/{}", account_of(&keys.funder()));
++            println!("funder key {}", keys.funder);
++            Ok(())
++        }
++        ["image", elf] => {
++            let program = load_program(Path::new(elf))?;
++            println!("{:?}", program.id());
++            Ok(())
++        }
++        ["fund", dir, rpc, header, amount] => rt.block_on(fund(
++            Path::new(dir),
++            &client(rpc)?,
++            header.parse()?,
++            amount.parse()?,
++            dry_run,
++        )),
++        ["execute", dir, rpc, elf, header, first_segment, vault_balance, amount] => rt.block_on(execute(
++            Path::new(dir),
++            &client(rpc)?,
++            Path::new(elf),
++            header.parse()?,
++            first_segment.parse()?,
++            vault_balance.parse()?,
++            amount.parse()?,
++            dry_run,
++        )),
++        _ => bail!("usage: init DIR | image ELF | fund DIR RPC HEADER AMOUNT | execute DIR RPC ELF HEADER FIRST_SEGMENT VAULT_BALANCE AMOUNT [--dry-run]"),
++    }
++}

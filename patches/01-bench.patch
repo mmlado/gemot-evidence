@@ -1,0 +1,456 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index 6cc2f3dd9..40218d890 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -8189,6 +8189,24 @@ dependencies = [
+  "unsigned-varint 0.8.0",
+ ]
+ 
++[[package]]
++name = "multisig_bench"
++version = "0.1.0"
++dependencies = [
++ "anyhow",
++ "borsh",
++ "clap",
++ "ed25519-dalek",
++ "k256 0.13.4",
++ "lee",
++ "lee_core",
++ "risc0-zkvm",
++ "serde",
++ "serde_json",
++ "test_guest_core",
++ "test_programs",
++]
++
+ [[package]]
+ name = "multistream-select"
+ version = "0.13.0"
+@@ -12496,6 +12514,8 @@ name = "test_guest_core"
+ version = "0.1.0"
+ dependencies = [
+  "borsh",
++ "ed25519-dalek",
++ "k256 0.13.4",
+  "lee_core",
+ ]
+ 
+diff --git a/Cargo.toml b/Cargo.toml
+index 03f5338c5..921962152 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -77,6 +77,7 @@ members = [
+   "test_fixtures",
+ 
+   "tools/cycle_bench",
++  "tools/multisig_bench",
+   "tools/crypto_primitives_bench",
+   "tools/integration_bench",
+   "tools/cross_zone_chat",
+diff --git a/test_guest_core/Cargo.toml b/test_guest_core/Cargo.toml
+index 289f9b03b..f569ef557 100644
+--- a/test_guest_core/Cargo.toml
++++ b/test_guest_core/Cargo.toml
+@@ -10,3 +10,5 @@ workspace = true
+ [dependencies]
+ borsh.workspace = true
+ lee_core.workspace = true
++ed25519-dalek.workspace = true
++k256.workspace = true
+diff --git a/test_guest_core/src/guests.rs b/test_guest_core/src/guests.rs
+index f6c46ddee..f6ba3cf62 100644
+--- a/test_guest_core/src/guests.rs
++++ b/test_guest_core/src/guests.rs
+@@ -87,3 +87,85 @@ pub fn pda_spend_proxy() {
+     ));
+     plan.write();
+ }
++// Appended to test_guest_core/src/guests.rs. Verifies M ed25519 approvals over one
++// 32-byte message inside the guest, then writes M into the single account's data.
++
++#[derive(borsh::BorshSerialize, borsh::BorshDeserialize)]
++pub struct MultisigVerify {
++    pub message: [u8; 32],
++    pub approvals: Vec<Approval>,
++}
++
++#[derive(borsh::BorshSerialize, borsh::BorshDeserialize, Clone)]
++pub struct Approval {
++    pub public_key: [u8; 32],
++    pub signature: [u8; 64],
++}
++
++pub fn multisig_verify() {
++    match read_program_call::<MultisigVerify>() {
++        ProgramCall::Plan(input, instruction) => {
++            let Ok([account]) = <[_; 1]>::try_from(input.accounts.clone()) else {
++                panic!("multisig_verify requires exactly 1 account");
++            };
++            let mut seen: Vec<[u8; 32]> = Vec::with_capacity(instruction.approvals.len());
++            for approval in &instruction.approvals {
++                assert!(!seen.contains(&approval.public_key), "duplicate signer");
++                seen.push(approval.public_key);
++                let key = ed25519_dalek::VerifyingKey::from_bytes(&approval.public_key)
++                    .expect("valid public key");
++                let signature = ed25519_dalek::Signature::from_bytes(&approval.signature);
++                key.verify_strict(&instruction.message, &signature)
++                    .expect("approval signature verifies");
++            }
++            let count = u32::try_from(instruction.approvals.len()).expect("fits u32");
++            let effect = ShardEffect::new(&account, &count);
++            GuestOutput::Plan(PlanOutput::new(input).with_effects(vec![effect])).write();
++        }
++        ProgramCall::Apply(input) => {
++            let count: u32 = borsh::from_slice(&input.effect_data).expect("own effect");
++            let data = count
++                .to_le_bytes()
++                .to_vec()
++                .try_into()
++                .expect("4 bytes fit the data limit");
++            apply_write(input, data);
++        }
++    }
++}
++
++/// Same as `multisig_verify`, with BIP-340 Schnorr approvals on secp256k1 checked the way
++/// LEZ checks its own transaction signatures (`verify_prehash` over a 32-byte digest).
++pub fn multisig_verify_schnorr() {
++    use k256::ecdsa::signature::hazmat::PrehashVerifier as _;
++    match read_program_call::<MultisigVerify>() {
++        ProgramCall::Plan(input, instruction) => {
++            let Ok([account]) = <[_; 1]>::try_from(input.accounts.clone()) else {
++                panic!("multisig_verify_schnorr requires exactly 1 account");
++            };
++            let mut seen: Vec<[u8; 32]> = Vec::with_capacity(instruction.approvals.len());
++            for approval in &instruction.approvals {
++                assert!(!seen.contains(&approval.public_key), "duplicate signer");
++                seen.push(approval.public_key);
++                let key = k256::schnorr::VerifyingKey::from_bytes(&approval.public_key)
++                    .expect("valid x-only public key");
++                let signature = k256::schnorr::Signature::try_from(&approval.signature[..])
++                    .expect("valid signature encoding");
++                key.verify_prehash(&instruction.message, &signature)
++                    .expect("approval signature verifies");
++            }
++            let count = u32::try_from(instruction.approvals.len()).expect("fits u32");
++            let effect = ShardEffect::new(&account, &count);
++            GuestOutput::Plan(PlanOutput::new(input).with_effects(vec![effect])).write();
++        }
++        ProgramCall::Apply(input) => {
++            let count: u32 = borsh::from_slice(&input.effect_data).expect("own effect");
++            let data = count
++                .to_le_bytes()
++                .to_vec()
++                .try_into()
++                .expect("4 bytes fit the data limit");
++            apply_write(input, data);
++        }
++    }
++}
+diff --git a/test_programs/guest/src/bin/multisig_verify.rs b/test_programs/guest/src/bin/multisig_verify.rs
+new file mode 100644
+index 000000000..e30b39c73
+--- /dev/null
++++ b/test_programs/guest/src/bin/multisig_verify.rs
+@@ -0,0 +1,3 @@
++fn main() {
++    test_guest_core::guests::multisig_verify();
++}
+diff --git a/test_programs/guest/src/bin/multisig_verify_schnorr.rs b/test_programs/guest/src/bin/multisig_verify_schnorr.rs
+new file mode 100644
+index 000000000..1bc1481f3
+--- /dev/null
++++ b/test_programs/guest/src/bin/multisig_verify_schnorr.rs
+@@ -0,0 +1,3 @@
++fn main() {
++    test_guest_core::guests::multisig_verify_schnorr();
++}
+diff --git a/test_programs/src/lib.rs b/test_programs/src/lib.rs
+index 3b32aa31e..ff3a20c43 100644
+--- a/test_programs/src/lib.rs
++++ b/test_programs/src/lib.rs
+@@ -83,3 +83,27 @@ pub const fn clock_chain_caller() -> Program {
+ 
+     Program::new_unchecked(CLOCK_CHAIN_CALLER_ID, Cow::Borrowed(CLOCK_CHAIN_CALLER_ELF))
+ }
++#[must_use]
++#[inline]
++pub const fn multisig_verify() -> Program {
++    use guests::{MULTISIG_VERIFY_ELF, MULTISIG_VERIFY_ID, MULTISIG_VERIFY_PATH};
++
++    let _unused = MULTISIG_VERIFY_PATH;
++
++    Program::new_unchecked(MULTISIG_VERIFY_ID, Cow::Borrowed(MULTISIG_VERIFY_ELF))
++}
++
++#[must_use]
++#[inline]
++pub const fn multisig_verify_schnorr() -> Program {
++    use guests::{
++        MULTISIG_VERIFY_SCHNORR_ELF, MULTISIG_VERIFY_SCHNORR_ID, MULTISIG_VERIFY_SCHNORR_PATH,
++    };
++
++    let _unused = MULTISIG_VERIFY_SCHNORR_PATH;
++
++    Program::new_unchecked(
++        MULTISIG_VERIFY_SCHNORR_ID,
++        Cow::Borrowed(MULTISIG_VERIFY_SCHNORR_ELF),
++    )
++}
+diff --git a/tools/multisig_bench/Cargo.toml b/tools/multisig_bench/Cargo.toml
+new file mode 100644
+index 000000000..393d1508e
+--- /dev/null
++++ b/tools/multisig_bench/Cargo.toml
+@@ -0,0 +1,27 @@
++[package]
++name = "multisig_bench"
++version = "0.1.0"
++edition = "2024"
++license = { workspace = true }
++publish = false
++
++[lints]
++workspace = true
++
++[features]
++default = []
++prove = ["lee/prove", "risc0-zkvm/prove"]
++
++[dependencies]
++lee = { workspace = true }
++lee_core = { workspace = true, features = ["host"] }
++test_guest_core.workspace = true
++test_programs.workspace = true
++ed25519-dalek.workspace = true
++k256.workspace = true
++risc0-zkvm.workspace = true
++borsh.workspace = true
++serde.workspace = true
++serde_json.workspace = true
++anyhow.workspace = true
++clap = { workspace = true }
+diff --git a/tools/multisig_bench/src/main.rs b/tools/multisig_bench/src/main.rs
+new file mode 100644
+index 000000000..4f4e81590
+--- /dev/null
++++ b/tools/multisig_bench/src/main.rs
+@@ -0,0 +1,217 @@
++//! Cycle cost of verifying M ed25519 approvals inside a LEZ guest, as a function of M.
++//! Mirrors tools/cycle_bench: executor user cycles per phase, optional real proving.
++//! Run: cargo run --release -p multisig_bench -- --m 1,2,3,5,7,9,12 [--prove] [--out file.json]
++
++use std::time::Instant;
++
++use anyhow::{Result, bail};
++use clap::Parser;
++use ed25519_dalek::{Signer, SigningKey};
++use lee::program::Program;
++use lee_core::{
++    account::{AccountId, ProgramShardSelector, ShardData},
++    from_frame,
++    program::{AccountMeta, ApplyInput, GuestOutput, PlanInput, PlanOutput},
++};
++use risc0_zkvm::{ExecutorEnv, default_executor, default_prover};
++use test_guest_core::guests::{Approval, MultisigVerify};
++
++const EXECUTION_LIMIT: u64 = 1024 * 1024 * 32;
++
++#[derive(Parser)]
++struct Args {
++    /// Comma-separated list of M values.
++    #[arg(long, default_value = "1,2,3,5,7,9,12")]
++    m: String,
++    /// Also prove each Plan phase with the default prover. Slow on CPU.
++    #[arg(long)]
++    prove: bool,
++    /// Write results as JSON here.
++    #[arg(long, default_value = "target/multisig_bench.json")]
++    out: String,
++    /// Enforce a session limit on the executor, like LEZ's cycle budget.
++    #[arg(long)]
++    budget: Option<u64>,
++    /// Flip one byte of the last signature: the guest must reject it.
++    #[arg(long)]
++    tamper: bool,
++    /// Approval signature scheme.
++    #[arg(long, value_enum, default_value_t = Scheme::Ed25519)]
++    scheme: Scheme,
++}
++
++#[derive(Clone, Copy, PartialEq, Eq, Debug, clap::ValueEnum, serde::Serialize)]
++enum Scheme {
++    Ed25519,
++    Schnorr,
++}
++
++impl Scheme {
++    fn name(self) -> &'static str {
++        match self {
++            Self::Ed25519 => "ed25519",
++            Self::Schnorr => "schnorr",
++        }
++    }
++}
++
++#[derive(serde::Serialize)]
++struct Row {
++    scheme: &'static str,
++    m: usize,
++    phase: &'static str,
++    user_cycles: u64,
++    segments: usize,
++    share_of_limit: f64,
++    exec_ms: f64,
++    prove_ms: Option<f64>,
++    prove_total_cycles: Option<u64>,
++    prove_segments: Option<usize>,
++}
++
++fn instruction(m: usize, tamper: bool, scheme: Scheme) -> MultisigVerify {
++    let message = [7u8; 32];
++    let mut approvals: Vec<Approval> = (0..m)
++        .map(|i| {
++            let seed = [u8::try_from(i + 1).expect("small"); 32];
++            match scheme {
++                Scheme::Ed25519 => {
++                    let key = SigningKey::from_bytes(&seed);
++                    Approval {
++                        public_key: key.verifying_key().to_bytes(),
++                        signature: key.sign(&message).to_bytes(),
++                    }
++                }
++                Scheme::Schnorr => {
++                    // Signed the way LEZ signs a transaction hash.
++                    let key = k256::schnorr::SigningKey::from_bytes(&seed).expect("valid scalar");
++                    let aux = [0u8; 32];
++                    let signature = key
++                        .sign_prehash_with_aux_rand(&message, &aux)
++                        .expect("signs");
++                    Approval {
++                        public_key: key.verifying_key().to_bytes().into(),
++                        signature: signature.to_bytes(),
++                    }
++                }
++            }
++        })
++        .collect();
++    if tamper {
++        if let Some(last) = approvals.last_mut() {
++            last.signature[5] ^= 0x01;
++        }
++    }
++    MultisigVerify { message, approvals }
++}
++
++fn run_phase(
++    scheme: &'static str,
++    m: usize,
++    phase: &'static str,
++    program: &Program,
++    prove: bool,
++    budget: Option<u64>,
++    write: impl Fn(&mut risc0_zkvm::ExecutorEnvBuilder) -> Result<()>,
++) -> Result<(Vec<u8>, Row)> {
++    let mut env_builder = ExecutorEnv::builder();
++    if let Some(b) = budget {
++        env_builder.session_limit(Some(b));
++    }
++    write(&mut env_builder)?;
++    let env = env_builder.build()?;
++    let started = Instant::now();
++    let info = default_executor().execute(env, program.elf())?;
++    let exec_ms = started.elapsed().as_secs_f64() * 1_000.0;
++    let user_cycles = info.cycles();
++    let mut row = Row {
++        scheme,
++        m,
++        phase,
++        user_cycles,
++        segments: info.segments.len(),
++        share_of_limit: user_cycles as f64 / EXECUTION_LIMIT as f64,
++        exec_ms,
++        prove_ms: None,
++        prove_total_cycles: None,
++        prove_segments: None,
++    };
++    eprintln!(
++        "{scheme} M={m} {phase}: user_cycles={user_cycles} ({:.1}% of 32M) segments={} exec={exec_ms:.0}ms",
++        row.share_of_limit * 100.0,
++        row.segments
++    );
++    if prove {
++        let mut env_builder = ExecutorEnv::builder();
++        write(&mut env_builder)?;
++        let env = env_builder.build()?;
++        let started = Instant::now();
++        let prove_info = default_prover()
++            .prove(env, program.elf())
++            .map_err(|e| anyhow::anyhow!("prove failed: {e}"))?;
++        let prove_ms = started.elapsed().as_secs_f64() * 1_000.0;
++        row.prove_ms = Some(prove_ms);
++        row.prove_total_cycles = Some(prove_info.stats.total_cycles);
++        row.prove_segments = Some(prove_info.stats.segments);
++        let receipt_path = format!("target/receipt_{scheme}_m{m}_{phase}.json");
++        std::fs::write(&receipt_path, serde_json::to_vec(&prove_info.receipt)?)?;
++        prove_info
++            .receipt
++            .verify(program.id())
++            .map_err(|e| anyhow::anyhow!("receipt verify failed: {e}"))?;
++        eprintln!("M={m} {phase}: receipt verified against the image id and saved to {receipt_path}");
++        eprintln!(
++            "{scheme} M={m} {phase}: proved in {:.1}s, total_cycles={}, segments={}",
++            prove_ms / 1_000.0,
++            prove_info.stats.total_cycles,
++            prove_info.stats.segments
++        );
++    }
++    Ok((info.journal.bytes, row))
++}
++
++fn main() -> Result<()> {
++    let args = Args::parse();
++    let program = match args.scheme {
++        Scheme::Ed25519 => test_programs::multisig_verify(),
++        Scheme::Schnorr => test_programs::multisig_verify_schnorr(),
++    };
++    let scheme = args.scheme.name();
++    let self_account_id = AccountId::from_builtin_program(program.id());
++    let mut rows = Vec::new();
++    for m in args.m.split(',').map(|s| s.trim().parse::<usize>()) {
++        let m = m?;
++        let account = AccountMeta::new(AccountId::new([9u8; 32]), false, self_account_id);
++        let input = PlanInput {
++            self_account_id,
++            caller_account_id: None,
++            accounts: vec![account.clone()],
++            instruction_data: borsh::to_vec(&instruction(m, args.tamper, args.scheme))?,
++        };
++        let (journal, row) = run_phase(scheme, m, "plan", &program, args.prove, args.budget, |env| {
++            Ok(Program::write_plan_inputs(&input, env)?)
++        })?;
++        rows.push(row);
++        let payload = from_frame(&journal).ok_or_else(|| anyhow::anyhow!("malformed journal"))?;
++        let plan: PlanOutput = match borsh::from_slice::<GuestOutput>(payload)? {
++            GuestOutput::Plan(plan) => plan,
++            GuestOutput::Apply(_) => bail!("plan phase returned an apply journal"),
++        };
++        for effect in plan.effects {
++            let apply_input = ApplyInput {
++                self_account_id,
++                selector: effect.selector,
++                pre_data: ShardData::default(),
++                effect_data: effect.data,
++            };
++            let (_, row) = run_phase(scheme, m, "apply", &program, false, args.budget, |env| {
++                Ok(Program::write_apply_inputs(&apply_input, env)?)
++            })?;
++            rows.push(row);
++        }
++        let _ = ProgramShardSelector::from(&account);
++    }
++    std::fs::write(&args.out, serde_json::to_string_pretty(&rows)?)?;
++    eprintln!("wrote {}", args.out);
++    Ok(())
++}

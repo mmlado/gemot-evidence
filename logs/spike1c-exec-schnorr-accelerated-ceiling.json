@@ -1,0 +1,150 @@
+{
+ "budget": 33554432,
+ "note": "executor with session_limit set to LEZ DEFAULT_PUBLIC_CYCLE_BUDGET; M=115, 116, 117 and 118 failed with \"Session limit exceeded\" and produced no row; stock k256 fails the same way at M=6 (M=5 passes at 28,427,816)",
+ "rows": [
+  {
+   "scheme": "schnorr",
+   "m": 40,
+   "phase": "plan",
+   "user_cycles": 11658680,
+   "segments": 12,
+   "share_of_limit": 0.3474557399749756,
+   "exec_ms": 1667.894956,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 40,
+   "phase": "apply",
+   "user_cycles": 7941,
+   "segments": 1,
+   "share_of_limit": 0.00023666024208068848,
+   "exec_ms": 54.502991,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 60,
+   "phase": "plan",
+   "user_cycles": 17519936,
+   "segments": 18,
+   "share_of_limit": 0.5221347808837891,
+   "exec_ms": 2305.525174,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 60,
+   "phase": "apply",
+   "user_cycles": 7941,
+   "segments": 1,
+   "share_of_limit": 0.00023666024208068848,
+   "exec_ms": 114.82266800000001,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 80,
+   "phase": "plan",
+   "user_cycles": 23399682,
+   "segments": 24,
+   "share_of_limit": 0.697364866733551,
+   "exec_ms": 2520.001943,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 80,
+   "phase": "apply",
+   "user_cycles": 7941,
+   "segments": 1,
+   "share_of_limit": 0.00023666024208068848,
+   "exec_ms": 68.629263,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 100,
+   "phase": "plan",
+   "user_cycles": 29282997,
+   "segments": 30,
+   "share_of_limit": 0.8727013170719147,
+   "exec_ms": 5098.3566519999995,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 100,
+   "phase": "apply",
+   "user_cycles": 7941,
+   "segments": 1,
+   "share_of_limit": 0.00023666024208068848,
+   "exec_ms": 83.019488,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 110,
+   "phase": "plan",
+   "user_cycles": 32212888,
+   "segments": 33,
+   "share_of_limit": 0.9600188732147217,
+   "exec_ms": 5355.98535,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 110,
+   "phase": "apply",
+   "user_cycles": 7941,
+   "segments": 1,
+   "share_of_limit": 0.00023666024208068848,
+   "exec_ms": 64.907885,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 114,
+   "phase": "plan",
+   "user_cycles": 33391476,
+   "segments": 34,
+   "share_of_limit": 0.9951435327529907,
+   "exec_ms": 2349.389165,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  },
+  {
+   "scheme": "schnorr",
+   "m": 114,
+   "phase": "apply",
+   "user_cycles": 7941,
+   "segments": 1,
+   "share_of_limit": 0.00023666024208068848,
+   "exec_ms": 48.412445,
+   "prove_ms": null,
+   "prove_total_cycles": null,
+   "prove_segments": null
+  }
+ ]
+}

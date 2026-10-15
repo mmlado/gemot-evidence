@@ -1,0 +1,18 @@
+=== threads 16 start 2026-10-11T17:22:19+02:00
+schnorr M=5 plan: user_cycles=1473542 (4.4% of 32M) segments=2 exec=80ms
+schnorr M=5 plan: proved in 215.8s, total_cycles=2097152, segments=2
+schnorr M=5 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=27ms
+	Percent of CPU this job got: 1332%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:36.00
+	Maximum resident set size (kbytes): 9609728
+	Exit status: 0
+=== threads 16 end 2026-10-11T17:25:55+02:00
+=== threads 8 start 2026-10-11T17:25:55+02:00
+schnorr M=5 plan: user_cycles=1473542 (4.4% of 32M) segments=2 exec=74ms
+schnorr M=5 plan: proved in 288.8s, total_cycles=2097152, segments=2
+schnorr M=5 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=27ms
+	Percent of CPU this job got: 762%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:48.94
+	Maximum resident set size (kbytes): 9609856
+	Exit status: 0
+=== threads 8 end 2026-10-11T17:30:44+02:00

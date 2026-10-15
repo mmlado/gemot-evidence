@@ -1,0 +1,53 @@
+=== build+run start 2026-10-11T19:03:42+02:00 RISC0_DEV_MODE unset, release
+   Compiling lee v0.1.0 (lez-stock/lee/state_machine)
+    Finished `release` profile [optimized] target(s) in 5.92s
+  Executable unittests src/lib.rs (target/release/deps/lee-94ea962c09b2afde)
+=== prove start 2026-10-11T19:03:48+02:00
+    Finished `release` profile [optimized] target(s) in 5.86s
+     Running unittests src/lib.rs (target/release/deps/lee-94ea962c09b2afde)
+
+running 1 test
+test state::tests::rfp005_spike::rfp005_public_part_of_a_private_transaction ... RFP005 padding=None prove_time=387.027147518s
+RFP005   public_actions=[]
+RFP005   nonces=[]
+RFP005   private_actions=2 (ciphertext_len, epk_len, view_tag)=[(169, 1088, 218), (169, 1088, 0)]
+RFP005   block_window=ValidityWindow { from: None, to: None } timestamp_window=ValidityWindow { from: None, to: None }
+RFP005   program_image_claims=[]
+RFP005   signatures=0
+RFP005   message_bytes=2744 proof_bytes=225883 tx_bytes=228635
+RFP005 padding=Some(512) prove_time=406.308955927s
+RFP005   public_actions=[]
+RFP005   nonces=[]
+RFP005   private_actions=2 (ciphertext_len, epk_len, view_tag)=[(512, 1088, 218), (512, 1088, 0)]
+RFP005   block_window=ValidityWindow { from: None, to: None } timestamp_window=ValidityWindow { from: None, to: None }
+RFP005   program_image_claims=[]
+RFP005   signatures=0
+RFP005   message_bytes=3430 proof_bytes=226569 tx_bytes=230007
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 285 filtered out; finished in 793.34s
+
+	Command being timed: "cargo test --release -p lee --lib rfp005_public_part -- --nocapture --test-threads=1"
+	User time (seconds): 9804.68
+	System time (seconds): 71.52
+	Percent of CPU this job got: 1235%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 13:19.28
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 9602296
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 48
+	Minor (reclaiming a frame) page faults: 16123500
+	Voluntary context switches: 68476
+	Involuntary context switches: 7044389
+	Swaps: 0
+	File system inputs: 129984
+	File system outputs: 378592
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+=== end 2026-10-11T19:17:07+02:00

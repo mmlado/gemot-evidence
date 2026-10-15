@@ -1,0 +1,28 @@
+=== stock build 2026-10-13T16:16:55+02:00 * 1.97.0
+    Finished `release` profile [optimized] target(s) in 5m 13s
+schnorr M=1 plan: user_cycles=5521275 (16.5% of 32M) segments=6 exec=136ms
+schnorr M=2 plan: user_cycles=11032306 (32.9% of 32M) segments=12 exec=227ms
+schnorr M=3 plan: user_cycles=16543397 (49.3% of 32M) segments=17 exec=316ms
+schnorr M=5 plan: user_cycles=27565601 (82.2% of 32M) segments=28 exec=514ms
+schnorr M=7 plan: user_cycles=38587851 (115.0% of 32M) segments=39 exec=684ms
+schnorr M=6 plan: user_cycles=33076696 (98.6% of 32M) segments=34 exec=611ms
+=== accel build 2026-10-13T16:22:12+02:00 * 1.97.0
+    Finished `release` profile [optimized] target(s) in 4m 59s
+schnorr M=1 plan: user_cycles=296049 (0.9% of 32M) segments=1 exec=35ms
+schnorr M=2 plan: user_cycles=582202 (1.7% of 32M) segments=1 exec=43ms
+schnorr M=3 plan: user_cycles=863684 (2.6% of 32M) segments=1 exec=52ms
+schnorr M=5 plan: user_cycles=1425650 (4.2% of 32M) segments=2 exec=80ms
+schnorr M=7 plan: user_cycles=1986643 (5.9% of 32M) segments=3 exec=104ms
+schnorr M=9 plan: user_cycles=2546227 (7.6% of 32M) segments=3 exec=122ms
+schnorr M=12 plan: user_cycles=3385472 (10.1% of 32M) segments=4 exec=149ms
+schnorr M=20 plan: user_cycles=5639965 (16.8% of 32M) segments=6 exec=225ms
+schnorr M=114 plan: user_cycles=32300012 (96.3% of 32M) segments=33 exec=1091ms
+schnorr M=115 plan: user_cycles=32585367 (97.1% of 32M) segments=33 exec=1112ms
+schnorr M=116 plan: user_cycles=32869673 (98.0% of 32M) segments=34 exec=1125ms
+schnorr M=117 plan: user_cycles=33156059 (98.8% of 32M) segments=34 exec=1140ms
+schnorr M=118 plan: user_cycles=33443449 (99.7% of 32M) segments=34 exec=1152ms
+schnorr M=116 plan: user_cycles=32869673 (98.0% of 32M) segments=34 exec=1098ms
+schnorr M=117 plan: user_cycles=33156059 (98.8% of 32M) segments=34 exec=1135ms
+schnorr M=118 plan: user_cycles=33443449 (99.7% of 32M) segments=34 exec=1126ms
+Error: Session limit exceeded: 33554432 >= 33554432
+=== end 2026-10-13T16:27:23+02:00

@@ -1,0 +1,33 @@
+funder EKsnb6JNPavM4GYRcqvJAdJN4wQwAvxeK6fMGjJ3ktPY nonce Nonce(4), vault CDjsB56rqU6ydtkBUzmdmGWyMYWJSPUmHZ86q91egMXz
+fund proved in 249.332954906s, proof 235216 B, tx 247412 B
+submitted 948d260824703c25ddd851e212ccbd8d6e00b54dabdfc427d620918436c4fcbd
+Error: client error (SendRequest)
+
+Caused by:
+    0: connection error
+    1: Connection reset by peer (os error 104)
+Command exited with non-zero status 1
+	Command being timed: "<lez-v0.3.1>/target/release/rfp005_testnet fund <run dir> https://testnet.lez.logos.co FyAmXsAJSYL7fB9ALgSYrmPREWZd5eB7FemQhcdwVEoQ 1000000000"
+	User time (seconds): 3448.16
+	System time (seconds): 16.68
+	Percent of CPU this job got: 645%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 8:56.54
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 9597644
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 69
+	Minor (reclaiming a frame) page faults: 5636104
+	Voluntary context switches: 20642
+	Involuntary context switches: 1466359
+	Swaps: 0
+	File system inputs: 152720
+	File system outputs: 24
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+exit 1

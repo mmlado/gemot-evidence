@@ -1,0 +1,55 @@
+=== 0901 build start 2026-10-13T15:20:52+02:00 2811d0601 refactor(lez)!: remove authenticated_transfer Initialize
+   Compiling clock_core v0.1.0 (lez/lez/programs/clock/core)
+   Compiling cycle_bench v0.1.0 (lez/tools/cycle_bench)
+    Finished `release` profile [optimized] target(s) in 4m 00s
+=== 0901 run start 2026-10-13T15:24:52+02:00 load: 6.30 7.72 4.60
+warning: lee@0.1.0: Generated module at lez/target/release/build/lee-9e59094d9a728398/out/lee/privacy_preserving_circuit/mod.rs
+warning: programs@0.1.0: Generated module at lez/target/release/build/programs-f1ab2ccdf15b67ac/out/lez/programs/mod.rs
+program                 instruction                       user_cycles  segments  exec_ms (best / mean ± stdev)     calib_ms      net_ms
+---------------------------------------------------------------------------------------------------------------------------------------
+authenticated_transfer  Transfer                                12015         1  20.57 / 20.90 ± 0.26 (n=5)        3.23        1.84
+token                   Transfer                                15686         1  24.70 / 24.99 ± 0.19 (n=5)        4.21        5.97
+token                   Mint                                    15661         1  24.67 / 24.84 ± 0.19 (n=5)        4.21        5.93
+token                   Burn                                    15550         1  24.75 / 25.06 ± 0.28 (n=5)        4.18        6.01
+clock                   Tick (block_id+1, no multiples)         18329         1  20.46 / 20.60 ± 0.19 (n=5)        4.92        1.73
+amm                     SwapExactInput                          37809         1  29.85 / 30.20 ± 0.28 (n=5)       10.15       11.12
+amm                     AddLiquidity                            46184         1  30.77 / 31.02 ± 0.20 (n=5)       12.40       12.04
+ata                     Create                                  20660         1  22.93 / 23.20 ± 0.32 (n=5)        5.55        4.20
+
+public-execution ms calibration (pinned hardware):
+  fit: best_ms = 18.7323 + 2.686e-4 * user_cycles  (n=8, R²=0.7589)
+  throughput:    3724 cycles/ms
+  fixed overhead: 18.732 ms host-side per call (ELF parse + env build, off-cycle)
+  calib_ms = user_cycles / throughput  (compute only, overhead excluded)
+  net_ms   = best exec_ms - fixed overhead  (measured compute, overhead stripped)
+PPE: running composition cost (auth_transfer Transfer in PPE)
+
+label                          depth          prove_ms (s)   proof_bytes  error
+-----------------------------------------------------------------------------------------
+auth_transfer Transfer in PPE      0       54304.3 (54.3s)        223493  
+
+JSON written to lez/target/cycle_bench.json
+	Command being timed: "cargo run --release -p cycle_bench --features ppe -- --ppe"
+	User time (seconds): 708.51
+	System time (seconds): 6.88
+	Percent of CPU this job got: 1235%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:57.89
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1496632
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 20
+	Minor (reclaiming a frame) page faults: 1798158
+	Voluntary context switches: 20863
+	Involuntary context switches: 479443
+	Swaps: 0
+	File system inputs: 12400
+	File system outputs: 276280
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+=== 0901 end 2026-10-13T15:25:50+02:00 load: 11.78 9.09 5.27

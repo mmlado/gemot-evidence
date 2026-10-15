@@ -1,0 +1,58 @@
+# run-accelerated.sh from the reproduction package on another machine, RISC Zero Rust 1.97.0, cargo-risczero 3.0.6, r0vm 3.0.6.
+# The run's local path is replaced with results/. The UNEXPECTED line is from the script's earlier wording, which expected M=115 to fail.
+== sweep
+schnorr M=1 plan: user_cycles=295986 (0.9% of 32M) segments=1 exec=42ms
+schnorr M=1 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=27ms
+schnorr M=2 plan: user_cycles=582138 (1.7% of 32M) segments=1 exec=52ms
+schnorr M=2 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=28ms
+schnorr M=3 plan: user_cycles=863619 (2.6% of 32M) segments=1 exec=64ms
+schnorr M=3 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=27ms
+schnorr M=5 plan: user_cycles=1425583 (4.2% of 32M) segments=2 exec=95ms
+schnorr M=5 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=28ms
+schnorr M=7 plan: user_cycles=1986574 (5.9% of 32M) segments=3 exec=129ms
+schnorr M=7 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=28ms
+schnorr M=9 plan: user_cycles=2546156 (7.6% of 32M) segments=3 exec=151ms
+schnorr M=9 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=27ms
+schnorr M=12 plan: user_cycles=3385398 (10.1% of 32M) segments=4 exec=188ms
+schnorr M=12 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=27ms
+schnorr M=20 plan: user_cycles=5639883 (16.8% of 32M) segments=6 exec=303ms
+schnorr M=20 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=28ms
+wrote results/accel-sweep.json
+== ceiling under the budget, all expected to pass
+schnorr M=40 plan: user_cycles=11275796 (33.6% of 32M) segments=12 exec=566ms
+schnorr M=40 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=30ms
+schnorr M=60 plan: user_cycles=16945514 (50.5% of 32M) segments=18 exec=842ms
+schnorr M=60 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=28ms
+schnorr M=80 plan: user_cycles=22633659 (67.5% of 32M) segments=23 exec=1116ms
+schnorr M=80 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=29ms
+schnorr M=100 plan: user_cycles=28325406 (84.4% of 32M) segments=29 exec=1293ms
+schnorr M=100 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=29ms
+schnorr M=110 plan: user_cycles=31159572 (92.9% of 32M) segments=32 exec=1420ms
+schnorr M=110 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=28ms
+schnorr M=114 plan: user_cycles=32299840 (96.3% of 32M) segments=33 exec=1435ms
+schnorr M=114 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=29ms
+wrote results/accel-ceiling.json
+== M=115 under the budget, expected to fail
+schnorr M=115 plan: user_cycles=32585194 (97.1% of 32M) segments=33 exec=1463ms
+schnorr M=115 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=29ms
+wrote results/accel-m115.json
+UNEXPECTED: M=115 fit
+== one flipped signature byte, expected to fail
+
+thread 'main' (1) panicked at test_guest_core/src/guests.rs:155:22:
+approval signature verifies: signature::Error { source: None }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Error: Guest panicked: approval signature verifies: signature::Error { source: None }
+as expected, rejected
+== real proof at M of 5, 16 threads
+schnorr M=5 plan: user_cycles=1425583 (4.2% of 32M) segments=2 exec=92ms
+schnorr M=5 plan: proved in 231.6s, total_cycles=1572864, segments=2
+schnorr M=5 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=30ms
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 3:51.72
+        Maximum resident set size (kbytes): 9610140
+== real proof at M of 5, 8 threads
+schnorr M=5 plan: user_cycles=1425583 (4.2% of 32M) segments=2 exec=100ms
+schnorr M=5 plan: proved in 283.4s, total_cycles=1572864, segments=2
+schnorr M=5 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=26ms
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 4:43.62
+        Maximum resident set size (kbytes): 9609408

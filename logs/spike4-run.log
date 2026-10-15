@@ -1,0 +1,37 @@
+[11:26:04] alice daemon up
+[11:26:04] alice load: {"status":"ok","deps":["delivery_module"]}
+[11:26:05] alice init: {"error":null,"success":true,"value":null}
+[11:26:07] bob daemon up
+[11:26:08] bob load: {"status":"ok","deps":["delivery_module"]}
+[11:26:09] bob init: {"error":null,"success":true,"value":null}
+[11:26:11] carol daemon up
+[11:26:11] carol load: {"status":"ok","deps":["delivery_module"]}
+[11:26:12] carol init: {"error":null,"success":true,"value":null}
+[11:26:17] alice online, 5s after init
+[11:26:23] bob online, 11s after init
+[11:26:25] carol online, 13s after init
+[11:26:26] alice address af7a9e741d10363cafd347b231f3ebeb149d48953898af9390f3246392759795
+[11:26:26] bob address 5395f4ceecaf5ea21e4854635c95d6ec6707a59791a3cf8b88cf4dff1d2ac151
+[11:26:26] carol address f29941c9f90842f02ea176e5390b301411f95fcfd8f0434c07bb7a8c393e23ea
+[11:26:26] T0 alice creates the group
+[11:26:27] group id 16f50dff82
+[11:26:30] alice adds bob: {"error":null,"success":true,"value":null}
+[11:27:34] bob sees the group 68s after creation
+[11:27:37] bob adds carol: {"error":null,"success":true,"value":null}
+[11:28:51] carol sees the group 77s after the add
+[11:28:53] roster as alice sees it: [{"address":"af7a9e741d10363cafd347b231f3ebeb149d48953898af9390f3246392759795","pending":false},{"address":"5395f4ceecaf5ea21e4854635c95d6ec6707a59791a3cf8b88cf4dff1d2ac151","pending":false},{"address":"f29941c9f90842f02ea176e5390b301411f95fcfd8f0434c07bb7a8c393e23ea","pending":false}]
+[11:28:55] roster as carol sees it: [{"address":"af7a9e741d10363cafd347b231f3ebeb149d48953898af9390f3246392759795","pending":false},{"address":"5395f4ceecaf5ea21e4854635c95d6ec6707a59791a3cf8b88cf4dff1d2ac151","pending":false},{"address":"f29941c9f90842f02ea176e5390b301411f95fcfd8f0434c07bb7a8c393e23ea","pending":false}]
+[11:28:55] message round trip
+[11:28:58] carol received 3s after send
+[11:28:58] messages as carol sees them: [{"content":"proposal 1: pay 10 to X","from_self":false,"sender":"af7a9e741d10363cafd347b231f3ebeb149d48953898af9390f3246392759795","timestamp_ms":1791538136496}]
+[11:28:58] REMOVAL PROBE: methods exposed: ["init","shutdown","get_log_path","health","get_installation_name","set_installation_name","get_address","create_conversation","create_group_conversation","add_group_member","list_conversations","get_messages","list_group_members","send_message","set_conversation_nickname","delete_conversation","status","name","version","lidl"]
+[11:28:59] no remove, kick, leave, evict or ban method
+[11:28:59] reconciliation by new group: alice creates group 2 without carol
+[11:30:05] bob sees group 2 66s after creation
+[11:30:05] does carol still read group 1 after being left out of group 2?
+[11:30:36] YES, carol still reads the old group
+[11:30:36] can alice delete the old conversation locally: {"error":null,"success":true,"value":null}
+[after delete] send as alice: {"error":"conversation not found","success":false,"value":null}
+[11:30:47] status: alice={"convo_count":3,"delivery_adopted":false,"delivery_state":"online","detail":""}  bob={"convo_count":2,"delivery_adopted":false,"delivery_state":"online","detail":""}  carol={"convo_count":1,"delivery_adopted":false,"delivery_state":"online","detail":""}  
+[11:30:47] done
+script exit 0

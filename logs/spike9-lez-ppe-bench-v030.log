@@ -1,0 +1,34 @@
+=== v030 rerun, table skipped, start 2026-10-13T15:30:27+02:00 load: 5.03 10.19 7.12
+warning: lee@0.1.0: Generated module at lez/target/release/build/lee-c94769433fce7b12/out/lee/privacy_preserving_circuit/mod.rs
+warning: programs@0.1.0: Generated module at lez/target/release/build/programs-f1b8e09958189219/out/lez/programs/mod.rs
+PPE: running native execution (native Transfer in PPE)
+PPE: running composition cost (token Transfer in PPE)
+
+label                   depth          prove_ms (s)   proof_bytes  error
+----------------------------------------------------------------------------------
+native Transfer in PPE      0       24178.2 (24.2s)        223403  
+token Transfer in PPE       0       67444.6 (67.4s)        223534  
+	Command being timed: "cargo run --release -p cycle_bench --features ppe -- --ppe"
+	User time (seconds): 1188.92
+	System time (seconds): 10.48
+	Percent of CPU this job got: 1273%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:34.20
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2412748
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 16
+	Minor (reclaiming a frame) page faults: 2745172
+	Voluntary context switches: 26725
+	Involuntary context switches: 769516
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 263304
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+=== v030 end 2026-10-13T15:32:01+02:00 load: 15.64 12.35 8.18

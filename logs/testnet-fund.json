@@ -1,0 +1,10 @@
+{
+  "amount": "1000000000",
+  "block": 11482,
+  "proof_bytes": 235216,
+  "prove_seconds": 254.3914792,
+  "tx": "f990cd6f7ca2a345d49c5baec4aaffaba5e64167eb0389178ff6602b718cfb05",
+  "tx_bytes": 247412,
+  "vault": "CDjsB56rqU6ydtkBUzmdmGWyMYWJSPUmHZ86q91egMXz",
+  "vault_commitment_found": true
+}

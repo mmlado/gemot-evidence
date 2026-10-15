@@ -1,0 +1,41 @@
+warning: lee@0.1.0: Generated module at lez-accel/target/release/build/lee-b6dddae5d9d262b3/out/lee/privacy_preserving_circuit/mod.rs
+   Compiling test_methods v0.1.0 (lez-accel/lee/state_machine/test_methods)
+   Compiling lee v0.1.0 (lez-accel/lee/state_machine)
+    Finished `release` profile [optimized] target(s) in 5.37s
+     Running unittests src/lib.rs (target/release/deps/lee-8212ff8866394ced)
+
+running 1 test
+test state::tests::rfp005_whole_tx::rfp005_curve_m1 has been running for over 60 seconds
+RFP005 curve M=1 signatures=3 dummies=0 undisclosed=false recorded=0 prove_time=724.404217138s
+RFP005   private_actions=3 public_actions=0 signatures_in_tx=0
+RFP005   timestamp_window=ValidityWindow { from: Some(1000), to: Some(2000) } claims=[Disclosed { account_id: 2euPFFAFEY7S4HQiyno4Z9JY4umeJDLhuXFqMeTq6Wfj, image_id: [963154200, 4179483733, 884580160, 4169003283, 4026062540, 3817344647, 848641782, 574350209] }]
+RFP005   proof_bytes=228355 tx_bytes=233579
+RFP005   outside its window: Some(OutOfValidityWindow)
+RFP005   settled inside its window
+test state::tests::rfp005_whole_tx::rfp005_curve_m1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 288 filtered out; finished in 724.42s
+
+	Command being timed: "cargo test --release -p lee --lib state::tests::rfp005_whole_tx::rfp005_curve_m1 -- --exact --nocapture"
+	User time (seconds): 10040.20
+	System time (seconds): 56.14
+	Percent of CPU this job got: 1383%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 12:09.87
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 9611056
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 44
+	Minor (reclaiming a frame) page faults: 16210797
+	Voluntary context switches: 52423
+	Involuntary context switches: 4250966
+	Swaps: 0
+	File system inputs: 49576
+	File system outputs: 393128
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

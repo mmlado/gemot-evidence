@@ -1,0 +1,25 @@
+=== build 2026-10-11T21:08:37+02:00
+warning: lee@0.1.0: Generated module at lez-accel/target/release/build/lee-b6dddae5d9d262b3/out/lee/privacy_preserving_circuit/mod.rs
+   Compiling test_methods v0.1.0 (lez-accel/lee/state_machine/test_methods)
+   Compiling test_guest_core v0.1.0 (lez-accel/test_guest_core)
+   Compiling lee v0.1.0 (lez-accel/lee/state_machine)
+    Finished `release` profile [optimized] target(s) in 5.48s
+  Executable unittests src/lib.rs (target/release/deps/lee-8212ff8866394ced)
+warning: lee@0.1.0: Generated module at lez-stock/target/release/build/lee-75a56009fe6d94e4/out/lee/privacy_preserving_circuit/mod.rs
+   Compiling test_methods v0.1.0 (lez-stock/lee/state_machine/test_methods)
+   Compiling lee v0.1.0 (lez-stock/lee/state_machine)
+    Finished `release` profile [optimized] target(s) in 5.66s
+  Executable unittests src/lib.rs (target/release/deps/lee-94ea962c09b2afde)
+=== wallet-shape-m5 start 2026-10-11T21:08:48+02:00
+=== wallet-shape-m5 end 2026-10-11T21:24:33+02:00 exit=0
+=== curve-m1 start 2026-10-11T21:24:33+02:00
+=== curve-m1 end 2026-10-11T21:36:42+02:00 exit=0
+=== curve-m3 start 2026-10-11T21:36:42+02:00
+=== curve-m3 end 2026-10-11T21:51:27+02:00 exit=0
+=== curve-m10 start 2026-10-11T21:51:27+02:00
+=== curve-m10 end 2026-10-11T22:11:07+02:00 exit=0
+=== fallback-queue-m5 start 2026-10-11T22:11:07+02:00
+=== fallback-queue-m5 end 2026-10-11T22:41:26+02:00 exit=0
+=== admin-write start 2026-10-11T22:41:26+02:00
+=== admin-write end 2026-10-11T22:46:29+02:00 exit=0
+=== all done 2026-10-11T22:46:29+02:00

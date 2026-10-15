@@ -1,0 +1,30 @@
+# run-stock.sh from the reproduction package on another machine, RISC Zero Rust 1.97.0, cargo-risczero 3.0.6, r0vm 3.0.6.
+# The run's local path is replaced with results/. The UNEXPECTED line is from the script's earlier wording, which expected M=6 to fail.
+== sweep
+schnorr M=1 plan: user_cycles=5521275 (16.5% of 32M) segments=6 exec=172ms
+schnorr M=1 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=32ms
+schnorr M=2 plan: user_cycles=11032306 (32.9% of 32M) segments=12 exec=291ms
+schnorr M=2 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=33ms
+schnorr M=3 plan: user_cycles=16543397 (49.3% of 32M) segments=17 exec=418ms
+schnorr M=3 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=31ms
+schnorr M=5 plan: user_cycles=27565601 (82.2% of 32M) segments=28 exec=653ms
+schnorr M=5 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=31ms
+schnorr M=7 plan: user_cycles=38587851 (115.0% of 32M) segments=39 exec=892ms
+schnorr M=7 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=31ms
+wrote results/stock-sweep.json
+== M=5 under the budget, expected to pass
+schnorr M=5 plan: user_cycles=27565601 (82.2% of 32M) segments=28 exec=687ms
+schnorr M=5 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=34ms
+wrote results/stock-m5-budget.json
+== M=6 under the budget, expected to fail
+schnorr M=6 plan: user_cycles=33076696 (98.6% of 32M) segments=34 exec=785ms
+schnorr M=6 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=31ms
+wrote results/stock-m6-budget.json
+UNEXPECTED: M=6 fit
+== one flipped signature byte, expected to fail
+
+thread 'main' (1) panicked at test_guest_core/src/guests.rs:155:22:
+approval signature verifies: signature::Error { source: None }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Error: Guest panicked: approval signature verifies: signature::Error { source: None }
+as expected, rejected
