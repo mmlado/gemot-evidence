@@ -4,6 +4,8 @@ Measurements and platform findings behind Moonstruck's proposal for Logos RFP-00
 
 Everything here was built and run before filing, on LEZ v0.3.0 (commit db66590ab). Nothing the findings rest on changed in v0.3.1, and the public-testnet run in section 2 of the findings is on v0.3.1, the version the testnet runs.
 
+The proposal this evidence supports is [logos-co/rfp#221](https://github.com/logos-co/rfp/issues/221), filed 2026-10-15.
+
 **Start with [FINDINGS.md](FINDINGS.md).** It states each finding, how we measured it, and where the code, logs and receipts are.
 
 ## What is here
