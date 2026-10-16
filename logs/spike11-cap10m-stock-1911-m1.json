@@ -1,0 +1,26 @@
+[
+  {
+    "scheme": "schnorr",
+    "m": 1,
+    "phase": "plan",
+    "user_cycles": 5693770,
+    "segments": 6,
+    "share_of_limit": 0.16968756914138794,
+    "exec_ms": 237.30467299999998,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 1,
+    "phase": "apply",
+    "user_cycles": 7941,
+    "segments": 1,
+    "share_of_limit": 0.00023666024208068848,
+    "exec_ms": 43.138577,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  }
+]

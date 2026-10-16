@@ -1,0 +1,63 @@
+== accelerated, Rust 1911, raw counts M 30,32,33,34,35,36
+schnorr M=30 plan: user_cycles=8733112 (26.0% of 32M) segments=9 exec=593ms
+schnorr M=30 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=37ms
+schnorr M=32 plan: user_cycles=9321134 (27.8% of 32M) segments=10 exec=619ms
+schnorr M=32 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=35ms
+schnorr M=33 plan: user_cycles=9618262 (28.7% of 32M) segments=10 exec=608ms
+schnorr M=33 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=37ms
+schnorr M=34 plan: user_cycles=9909145 (29.5% of 32M) segments=11 exec=625ms
+schnorr M=34 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=38ms
+schnorr M=35 plan: user_cycles=10199687 (30.4% of 32M) segments=11 exec=661ms
+schnorr M=35 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=42ms
+schnorr M=36 plan: user_cycles=10490795 (31.3% of 32M) segments=11 exec=676ms
+schnorr M=36 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=42ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-accel-1911-sweep.json
+== accelerated, Rust 1911, M=33 under a 10,000,000 budget
+schnorr M=33 plan: user_cycles=9618262 (28.7% of 32M) segments=10 exec=591ms
+schnorr M=33 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=37ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-accel-1911-m33.json
+M=33 fits
+== accelerated, Rust 1911, M=34 under a 10,000,000 budget
+schnorr M=34 plan: user_cycles=9909145 (29.5% of 32M) segments=11 exec=610ms
+schnorr M=34 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=37ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-accel-1911-m34.json
+M=34 fits
+== accelerated, Rust 1911, M=35 under a 10,000,000 budget
+Error: Session limit exceeded: 10000080 >= 10000000
+M=35 exceeds the budget (exit 1)
+== accelerated, Rust 1911, M=36 under a 10,000,000 budget
+Error: Session limit exceeded: 10000000 >= 10000000
+M=36 exceeds the budget (exit 1)
+== accelerated, Rust 1970, raw counts M 30,32,33,34,35,36
+schnorr M=30 plan: user_cycles=8446078 (25.2% of 32M) segments=9 exec=541ms
+schnorr M=30 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=37ms
+schnorr M=32 plan: user_cycles=9014936 (26.9% of 32M) segments=10 exec=569ms
+schnorr M=32 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=36ms
+schnorr M=33 plan: user_cycles=9302467 (27.7% of 32M) segments=10 exec=602ms
+schnorr M=33 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=33ms
+schnorr M=34 plan: user_cycles=9583783 (28.6% of 32M) segments=10 exec=599ms
+schnorr M=34 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=37ms
+schnorr M=35 plan: user_cycles=9864760 (29.4% of 32M) segments=10 exec=606ms
+schnorr M=35 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=34ms
+schnorr M=36 plan: user_cycles=10146300 (30.2% of 32M) segments=11 exec=614ms
+schnorr M=36 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=32ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-accel-1970-sweep.json
+== accelerated, Rust 1970, M=33 under a 10,000,000 budget
+schnorr M=33 plan: user_cycles=9302467 (27.7% of 32M) segments=10 exec=563ms
+schnorr M=33 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=36ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-accel-1970-m33.json
+M=33 fits
+== accelerated, Rust 1970, M=34 under a 10,000,000 budget
+schnorr M=34 plan: user_cycles=9583783 (28.6% of 32M) segments=10 exec=581ms
+schnorr M=34 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=36ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-accel-1970-m34.json
+M=34 fits
+== accelerated, Rust 1970, M=35 under a 10,000,000 budget
+schnorr M=35 plan: user_cycles=9864760 (29.4% of 32M) segments=10 exec=598ms
+schnorr M=35 apply: user_cycles=7789 (0.0% of 32M) segments=1 exec=37ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-accel-1970-m35.json
+M=35 fits
+== accelerated, Rust 1970, M=36 under a 10,000,000 budget
+Error: Session limit exceeded: 10000000 >= 10000000
+M=36 exceeds the budget (exit 1)
+== done

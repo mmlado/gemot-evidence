@@ -1,0 +1,29 @@
+== stock, Rust 1911, raw counts M 1,2
+schnorr M=1 plan: user_cycles=5693770 (17.0% of 32M) segments=6 exec=223ms
+schnorr M=1 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=42ms
+schnorr M=2 plan: user_cycles=11377231 (33.9% of 32M) segments=12 exec=375ms
+schnorr M=2 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=42ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-stock-1911-sweep.json
+== stock, Rust 1911, M=1 under a 10,000,000 budget
+schnorr M=1 plan: user_cycles=5693770 (17.0% of 32M) segments=6 exec=237ms
+schnorr M=1 apply: user_cycles=7941 (0.0% of 32M) segments=1 exec=43ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-stock-1911-m1.json
+M=1 fits
+== stock, Rust 1911, M=2 under a 10,000,000 budget
+Error: Session limit exceeded: 10000000 >= 10000000
+M=2 exceeds the budget (exit 1)
+== stock, Rust 1970, raw counts M 1,2
+schnorr M=1 plan: user_cycles=5521275 (16.5% of 32M) segments=6 exec=226ms
+schnorr M=1 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=44ms
+schnorr M=2 plan: user_cycles=11032306 (32.9% of 32M) segments=12 exec=380ms
+schnorr M=2 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=38ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-stock-1970-sweep.json
+== stock, Rust 1970, M=1 under a 10,000,000 budget
+schnorr M=1 plan: user_cycles=5521275 (16.5% of 32M) segments=6 exec=229ms
+schnorr M=1 apply: user_cycles=7506 (0.0% of 32M) segments=1 exec=41ms
+wrote /home/mmlado/projects/logos/gemot-evidence/results/cap10m-stock-1970-m1.json
+M=1 fits
+== stock, Rust 1970, M=2 under a 10,000,000 budget
+Error: Session limit exceeded: 10000000 >= 10000000
+M=2 exceeds the budget (exit 1)
+== done

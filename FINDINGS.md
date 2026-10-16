@@ -18,15 +18,18 @@ Rows marked dev mode test logic only: the sequencer's checks are the same, but t
 
 ## 1. Approval verification cost
 
-Approvals are BIP-340 Schnorr signatures on secp256k1, LEZ's own scheme, checked with the same k256 `verify_prehash` call the sequencer uses. The guest verifies M signatures inside a two-phase LEZ program with LEZ's public cycle budget enforced: 32M, which is 33,554,432 user cycles.
+Approvals are BIP-340 Schnorr signatures on secp256k1, LEZ's own scheme, checked with the same k256 `verify_prehash` call the sequencer uses. The guest verifies M signatures inside a two-phase LEZ program under a session limit of 10,000,000 user cycles, the cap on a charged public transaction. On LEZ v0.3.0 and v0.3.1 every user public transaction pays a fee and declares a `gas_limit`, settlement runs it at that limit, and the fee market caps the limit at `MAX_GAS_EXEC`, 10,000,000 cycles per transaction and per block (`lez/chain_state/src/classify.rs`, `lez/programs/fee/core/src/market.rs`, `lez/chain_state/src/apply.rs`). The 32M `DEFAULT_PUBLIC_CYCLE_BUDGET` in `lee/state_machine/src/program/mod.rs` applies only to paths that carry no transaction budget.
 
 | M | Crates as LEZ ships them | Accelerated forks |
 | --- | --- | --- |
-| 1 signature | 5.68M cycles | 0.29M cycles |
-| 5 | 28.4M, 85 percent of the budget | 1.5M, 4 percent |
-| 6 | over the budget with our toolchain, 98.6 percent with Rust 1.97.0 | 1.8M, 5 percent |
-| 114 | | 33.4M, passes |
-| 115 | | fails |
+| 1 signature | 5.68M cycles, 57 percent of the cap | 0.29M cycles, 3 percent |
+| 2 | 11.4M, over the cap | 0.60M, 6 percent |
+| 5 | 28.4M, over the cap | 1.5M, 15 percent |
+| 7, a queue at M of 5 | 39.8M, over the cap | 2.05M, 21 percent |
+| 34 | | 9.9M, passes |
+| 35 | | fails |
+
+Until 2026-10-16 this section, and the proposal as filed, took the 32M default for the cap and reported a ceiling of 114 signatures, 118 with Rust 1.97.0, with M of 5 at 4 percent. Those runs are in `logs/spike1c-exec-schnorr-accelerated-ceiling.json` and `logs/spike10-*.log`, and their counts stand. Only the cap was wrong. The ceiling against the real cap was measured on 2026-10-16: `logs/spike11-cap10m-accel.log`, `logs/spike11-cap10m-stock.log`.
 
 **With a newer toolchain.** Everything above was compiled with RISC Zero's Rust 1.91.1. Cycle counts are exact for a given guest toolchain, not across toolchains. An independent run of the reproduction package on another machine, with Rust 1.97.0, cargo-risczero 3.0.6 and r0vm 3.0.6, gave about 3 percent fewer cycles, and our rerun with the same versions matched it:
 
@@ -34,19 +37,19 @@ Approvals are BIP-340 Schnorr signatures on secp256k1, LEZ's own scheme, checked
 | --- | --- | --- | --- |
 | Stock, M of 1 | 5,693,770 | 5,521,275 | 5,521,275 |
 | Stock, M of 5 | 28,427,816 | 27,565,601 | 27,565,601 |
-| Stock, M of 6 under the budget | over it | 33,076,696, fits | 33,076,696, fits |
+| Stock, M of 2 under the cap | 11,377,231, over it | 11,032,306, over it | not rerun |
 | Accelerated, M of 1 | 305,643 | 296,049 | 295,986 |
 | Accelerated, M of 5 | 1,473,542 | 1,425,650 | 1,425,583 |
-| Accelerated ceiling under the budget | 114, and 115 fails | 118, and 119 fails | at least 115 |
+| Accelerated ceiling under the cap | 34 at 9,909,145, and 35 fails | 35 at 9,864,760, and 36 fails | not rerun |
 | Real proof of the accelerated M of 5 guest | 2,097,152 total cycles | | 1,572,864 total cycles, 231.6 s on 16 threads and 283.4 s on 8, 9.2 GiB |
 
-The stock counts are identical across the two machines. The accelerated counts differ by 60 to 170 cycles in 0.3M to 32M, most likely because each build embeds its own file paths, which shifts memory alignment slightly. The newer toolchain only helps: M of 6 fits even with the crates LEZ ships, and the accelerated ceiling rises to 118 signatures. Files: `logs/spike10-rust197-ours.log`, `logs/spike10-rust197-independent-stock.log`, `logs/spike10-rust197-independent-accelerated.log`.
+The stock counts are identical across the two machines. The accelerated counts differ by 60 to 170 cycles in 0.3M to 32M, most likely because each build embeds its own file paths, which shifts memory alignment slightly. The newer toolchain only helps: about 3 percent fewer cycles, and the accelerated ceiling rises from 34 to 35 signatures. Files: `logs/spike10-rust197-ours.log`, `logs/spike10-rust197-independent-stock.log`, `logs/spike10-rust197-independent-accelerated.log`, `logs/spike11-cap10m-accel.log`, `logs/spike11-cap10m-stock.log`.
 
-The accelerated figure reproduces fryorcraken/lez-signature-bench, about 0.3M per verification on LEZ v0.2.0-rc3, on the v0.3.0 two-phase model. A queue checks M plus two signatures, the approvals plus the proposer's and the executor's, so at M of 5 it checks seven: about 2.05M cycles with the forks and 39.8M without, over the budget. The private path has no cycle cap, so under the private posture the limit is proving time.
+The accelerated figure reproduces fryorcraken/lez-signature-bench, about 0.3M per verification on LEZ v0.2.0-rc3, on the v0.3.0 two-phase model. A queue checks M plus two signatures, the approvals plus the proposer's and the executor's, so at M of 5 it checks seven: about 2.05M cycles with the forks, 21 percent of the cap, and 39.8M without, four times over it. The private path has no cycle cap, so under the private posture the limit is proving time.
 
 The accelerated M of 5 verification guest alone, 2.1M total cycles in 2 segments, proves in 215.8 s on 16 threads and 288.8 s on 8, with a peak of 9,609,728 KiB either way. A one-byte tamper makes the guest panic on "approval signature verifies".
 
-Files: `lez-tests/multisig_bench/`, `patches/01-bench.patch`, `patches/02-accelerated-forks.patch`, `scripts/run-stock.sh`, `scripts/run-accelerated.sh`, `logs/spike1c-*.json`, `logs/spike1c-prove-memory.log`, `receipts/spike1c-receipt-schnorr-m5-accelerated.json`.
+Files: `lez-tests/multisig_bench/`, `patches/01-bench.patch`, `patches/02-accelerated-forks.patch`, `scripts/run-stock.sh`, `scripts/run-accelerated.sh`, `logs/spike1c-*.json`, `logs/spike1c-prove-memory.log`, `receipts/spike1c-receipt-schnorr-m5-accelerated.json`, `logs/spike11-cap10m-*.json`.
 
 ## 2. Real private transactions
 
@@ -158,7 +161,7 @@ Files: `chat/spike4.sh`, `chat/spike8.md`, `chat/decode-capture.py`, `logs/spike
 | Fact | Where in LEZ v0.3.0 | What depends on it |
 | --- | --- | --- |
 | Execution is two-phase: plan sees account metadata and emits effects and chained calls, apply runs once per account shard | `lee/state_machine/core/src/program/mod.rs` | The program's structure and the SPEL port |
-| Public executions and chained calls share a 32M budget counted in user cycles | `lee/state_machine/src/program/mod.rs` | The verification ceiling |
+| Every user public transaction is fee-charged and runs at its declared `gas_limit`, capped at `MAX_GAS_EXEC`, 10,000,000 cycles per transaction and per block. The 32M `DEFAULT_PUBLIC_CYCLE_BUDGET` applies only to paths without a transaction budget | `lez/chain_state/src/classify.rs`, `lez/programs/fee/core/src/market.rs`, `lez/chain_state/src/apply.rs`, `lee/state_machine/src/program/mod.rs` | The verification ceiling |
 | The private path proves the program with no cycle cap | `lee/state_machine/src/privacy_preserving_transaction/circuit/mod.rs` | Under the private posture the limit is proving time |
 | LEZ's signatures are BIP-340 Schnorr on secp256k1, checked with k256 `verify_prehash` | `lee/state_machine/src/signature/mod.rs` | The approval scheme |
 | An account holds at most 100 KiB of data | `lee/state_machine/core/src/account/data.rs` | Proposals recorded on chain fit |

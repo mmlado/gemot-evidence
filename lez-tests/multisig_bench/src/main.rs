@@ -16,7 +16,7 @@ use lee_core::{
 use risc0_zkvm::{ExecutorEnv, default_executor, default_prover};
 use test_guest_core::guests::{Approval, MultisigVerify};
 
-const EXECUTION_LIMIT: u64 = 1024 * 1024 * 32;
+const EXECUTION_LIMIT: u64 = 10_000_000;
 
 #[derive(Parser)]
 struct Args {
@@ -137,7 +137,7 @@ fn run_phase(
         prove_segments: None,
     };
     eprintln!(
-        "{scheme} M={m} {phase}: user_cycles={user_cycles} ({:.1}% of 32M) segments={} exec={exec_ms:.0}ms",
+        "{scheme} M={m} {phase}: user_cycles={user_cycles} ({:.1}% of 10M) segments={} exec={exec_ms:.0}ms",
         row.share_of_limit * 100.0,
         row.segments
     );

@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 WORK="${1:-$ROOT/work}"
 OUT="$ROOT/results"; mkdir -p "$OUT"
-BUDGET=33554432
+BUDGET=10000000
 THREADS="${THREADS:-16 8}"
 cd "$WORK/accel"
 export CARGO_TARGET_DIR="$PWD/target"
@@ -13,10 +13,12 @@ B=./target/release/multisig_bench
 export RISC0_DEV_MODE=0
 echo "== sweep"
 $B --scheme schnorr --m 1,2,3,5,7,9,12,20 --out "$OUT/accel-sweep.json"
-echo "== ceiling under the budget, all expected to pass"
-$B --scheme schnorr --m 40,60,80,100,110,114 --budget $BUDGET --out "$OUT/accel-ceiling.json"
-echo "== M=115 under the budget: over it with RISC Zero Rust 1.91.1, inside it with Rust 1.97.0"
-if $B --scheme schnorr --m 115 --budget $BUDGET --out "$OUT/accel-m115.json"; then echo "M=115 fits the budget with this toolchain"; else echo "M=115 exceeds the budget with this toolchain"; fi
+echo "== ceiling under the cap, all expected to pass"
+$B --scheme schnorr --m 20,30,32,33,34 --budget $BUDGET --out "$OUT/accel-ceiling.json"
+echo "== M=35 under the cap: over it with RISC Zero Rust 1.91.1, inside it with Rust 1.97.0"
+if $B --scheme schnorr --m 35 --budget $BUDGET --out "$OUT/accel-m35.json"; then echo "M=35 fits the cap with this toolchain"; else echo "M=35 exceeds the cap with this toolchain"; fi
+echo "== M=36 under the cap, expected to fail with either toolchain"
+if $B --scheme schnorr --m 36 --budget $BUDGET --out "$OUT/accel-m36.json"; then echo "UNEXPECTED: M=36 fits the cap"; else echo "as expected, M=36 exceeds the cap"; fi
 echo "== one flipped signature byte, expected to fail"
 if $B --scheme schnorr --m 1 --tamper --out "$OUT/accel-tamper.json"; then echo "UNEXPECTED: tampered signature accepted"; else echo "as expected, rejected"; fi
 [ "${SKIP_PROVE:-0}" = 1 ] && { echo "SKIP_PROVE=1, done"; exit 0; }

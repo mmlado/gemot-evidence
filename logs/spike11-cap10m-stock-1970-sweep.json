@@ -1,0 +1,50 @@
+[
+  {
+    "scheme": "schnorr",
+    "m": 1,
+    "phase": "plan",
+    "user_cycles": 5521275,
+    "segments": 6,
+    "share_of_limit": 0.16454681754112244,
+    "exec_ms": 226.443588,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 1,
+    "phase": "apply",
+    "user_cycles": 7506,
+    "segments": 1,
+    "share_of_limit": 0.00022369623184204102,
+    "exec_ms": 43.561471,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 2,
+    "phase": "plan",
+    "user_cycles": 11032306,
+    "segments": 12,
+    "share_of_limit": 0.3287883400917053,
+    "exec_ms": 379.632249,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  },
+  {
+    "scheme": "schnorr",
+    "m": 2,
+    "phase": "apply",
+    "user_cycles": 7506,
+    "segments": 1,
+    "share_of_limit": 0.00022369623184204102,
+    "exec_ms": 38.283539,
+    "prove_ms": null,
+    "prove_total_cycles": null,
+    "prove_segments": null
+  }
+]
