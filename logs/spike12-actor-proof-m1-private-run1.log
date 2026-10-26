@@ -1,0 +1,39 @@
+   Compiling test_methods v0.1.0 (<lez-checkout>/lee/state_machine/test_methods)
+warning: lee@0.1.0: Generated module at <lez-checkout>/target/release/build/lee-e36087980e368768/out/lee/privacy_preserving_circuit/mod.rs
+   Compiling lee v0.1.0 (<lez-checkout>/lee/state_machine)
+    Finished `release` profile [optimized] target(s) in 7.44s
+     Running unittests src/lib.rs (target/release/deps/lee-59a31887c5b46d37)
+
+running 1 test
+test state::tests::rfp005_actor::rfp005_actor_private_execute has been running for over 60 seconds
+RFP005-0.4 private M=1 signatures=3 recipient=private prove_time=910.110602797s proof_bytes=227308 tx_bytes=231489
+RFP005-0.4   private_actions=3 commitments=3 nullifiers=3
+RFP005-0.4   outside its window: Some(OutOfValidityWindow)
+RFP005-0.4   settled inside its window
+test state::tests::rfp005_actor::rfp005_actor_private_execute ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 295 filtered out; finished in 910.13s
+
+	Command being timed: "cargo test --release -p lee --lib state::tests::rfp005_actor::rfp005_actor_private_execute -- --ignored --exact --nocapture"
+	User time (seconds): 9585.80
+	System time (seconds): 68.67
+	Percent of CPU this job got: 1052%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 15:17.66
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 9611676
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 59
+	Minor (reclaiming a frame) page faults: 14912690
+	Voluntary context switches: 76469
+	Involuntary context switches: 7174625
+	Swaps: 0
+	File system inputs: 142648
+	File system outputs: 130672
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

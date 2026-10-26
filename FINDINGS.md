@@ -168,11 +168,64 @@ Files: `chat/spike4.sh`, `chat/spike8.md`, `chat/decode-capture.py`, `logs/spike
 | A program header can be immutable, and a mutable one can be replaced by its key holder | `lez/programs/program_loader/core/src/lib.rs` | Immutable deployment |
 | The chat module has no remove call, starts a new installation on every init, keeps older groups as read-only history, reads back the newest 500 messages after a restart, and a member sees only messages from after they joined | `rust-lib/chat_module.lidl`, chat module interface commit a83ed21a3 | Reconciliation, re-invite and re-posting |
 
+On LEZ dev at 7e3f7f7, the 0.4 line, the two-phase row gives way to the actor model and the private execution is metered at the 32M default, while the cap, the fee classification and the signature scheme hold, see section 9.
+
 Between v0.3.0 and v0.3.1 nothing changed in the state machine core, the private transaction code, the signatures, the circuit artifact, the fee classification, the block settings or the program loader, and the bumped logos-blockchain pin keeps the 2 MiB block.
+
+## 9. The execute on the 0.4 actor model
+
+Added 2026-10-26. Testnet 0.4 runs LEZ's actor model, merged into the `dev` branch on 2026-10-14 (PR #935) and untagged as of this date. We rewrote the whole execute of section 2 as one actor against `dev` commit 7e3f7f7 (2026-10-24) and measured it on both postures, on the same machine, with RISC Zero's Rust 1.97.0, cargo-risczero 3.0.6 and r0vm 3.0.6, risc0-zkvm 3.0.5 as the dev workspace pins it, and the same accelerated forks as before, k256 v0.13.4-risczero.1, sha2 v0.10.9-risczero.0 and crypto-bigint v0.5.5-risczero.0.
+
+What changes in the model. A program is one handler, `handle_message(input, message) -> Response`, that runs at one actor, an account and program pair, and sees only that actor's own state slot, the sender, and whether the receiving account authorized the message. There are no account lists, claims or program owner. Other actors are reached by messages: synchronous ones run in the same transaction, depth first, asynchronous ones are delivered later. A PDA's authority is granted by its program attaching the seed to a synchronous message, and the native token checks that grant before it debits (`lee/state_machine/core/src/program/mod.rs`, `lee/state_machine/core/src/native_token.rs`).
+
+The guest (`lez-tests/guests/rfp005_multisig_actor.rs`). The multisig actor keeps the member keys, the threshold and the executed digests in its own state. `Init` writes the configuration once, at top level. `QueueAndExecute` decodes the stored configuration, checks that the proposer, each approver and the executor are members and that their BIP-340 signatures over the digest verify with k256 `verify_prehash`, refuses a duplicate approver and a count below the threshold, records the digest, sets the timestamp window, and sends `Transfer` to the vault's native-balance actor with the vault's seed attached. The vault is a PDA of the program, public or private. What section 2's guest did across a plan, its effects and a chained call, this one does in one handler, with the configuration readable in the step that spends.
+
+### Public posture, under the 10M cap
+
+Executed through the state machine with the metering the sequencer bills (`ValidatedStateDiff::from_public_transaction_with_cycle_budget`). On dev the charged gas is the cycle count, clamped to the transaction's declared `gas_limit`, and the fee market still caps the limit at 10,000,000 per transaction and per block (`lez/chain_state/src/apply.rs`, `lez/programs/fee/core/src/market.rs`). The wallet's default `gas_limit` is 2,000,000 (`lez/wallet/src/lib.rs`), so a client declares a higher limit for M above 5.
+
+| M | Signatures checked | Cycles | Share of the cap |
+| --- | --- | --- | --- |
+| 1 | 3 | 863,472 | 8.6 percent |
+| 5 | 7 | 1,990,954 | 19.9 percent |
+| 10 | 12 | 3,418,526 | 34.2 percent |
+| 20 | 22 | 6,235,343 | 62.4 percent |
+| 30 | 32 | 9,097,768 | 91.0 percent |
+| 33 | 35 | 9,926,290 | 99.3 percent, the ceiling |
+| 34 | 36 | | fails with `OutOfGas { budget: 10000000 }` |
+
+About 283,350 cycles per signature with the membership check, against 282,400 per signature in section 1's verification guest at the same Rust 1.97.0, so the model change moves the cost of the thing the RFP asks about by a third of a percent. Everything else in the execute, decoding the configuration, the digest record and the transfer message, costs about 7,400 cycles. The ceiling of 35 signatures matches section 1's 35 at the same toolchain.
+
+Refusals, each from the state machine: four approvals for a threshold of five, `ProgramExecutionFailed("Guest panicked: below threshold")`; the execute at a timestamp outside its window, `OutOfValidityWindow`; a transfer sent straight to the vault's native-balance actor without the program's seed, `NativeTransferFailed(UnauthorizedSender)`. The last is the custody boundary: the vault has no key, and its balance moves only on a message this program sends with the seed.
+
+### Private posture, real proofs
+
+The configuration and the vault are private PDAs bound to the program under the member group's keys, and the execute is the root call to the configuration's actor. A private PDA at the root runs unauthorized, as LEZ's own tests have it, and the approvals are the authority. The payout goes to a new private account, as in section 2, or to a public account. On dev the host-side simulation meters the private execution at the 32M default (`handle_message_metered` in `lee/state_machine/src/privacy_preserving_transaction/circuit/mod.rs`), so a private execute has a cycle bound now, far above anything here. In dev mode both shapes settle inside their window and are refused outside it with `OutOfValidityWindow` (`logs/spike12-actor-private-dev-*.log`).
+
+Each row is one execute proved for real on 16 threads and then settled by the 0.4 state machine, inside its window, and refused outside it with `OutOfValidityWindow`. Peak memory was between 9,610,020 and 9,617,804 KiB, about 9.2 GiB, in every run, as on v0.3.0.
+
+| Execute | Private notes | Prove time | Proof | Whole transaction |
+| --- | --- | --- | --- | --- |
+| M of 1, three signatures, payout to a new private account | 3 | 822.9 s (13.7 min) | 227,308 B | 231,489 B |
+| M of 5, seven signatures, the same | 3 | 964.1 s (16.1 min) | 227,436 B | 231,745 B |
+| M of 10, twelve signatures, the same | 3 | 1,208.0 s (20.1 min) | 227,596 B | 232,065 B |
+| M of 5, seven signatures, payout to a public account | 2, and 1 public action | 830.0 s (13.8 min) | 226,331 B | 229,535 B |
+
+The Logos node on this machine was mining during a first pass over the same rows (`logs/spike12-actor-proof-*-run1.log`: 910.1, 1,103.8, 1,311.4 and 860.1 s), and a second pass with mining off still had a few other cores busy (`logs/spike12-actor-proof-m5-private-run2.log`, 1,114.5 s at M of 5). The rows above are the second pass, except M of 5, which is a third run on the quietest machine we had, so they are upper bounds by a few percent.
+
+What the curve says:
+
+- Against section 2 the actor model costs about a minute and a half more per private execute at M of 1, 12.1 to 13.7 minutes, and half a minute more at M of 5 and M of 10, 15.6 to 16.1 and 19.5 to 20.1. The sizes are within a kilobyte. The fixed cost of a private transaction with a program still dominates: nine more signatures, from M of 1 to M of 10, add 6.4 minutes, about 0.7 each.
+- A payout to a public account instead of a new private one saves one private note and about two minutes, in line with section 2's three minutes per private account consumed or written.
+- A member's machine still needs about 10 GB of free memory, and peak memory still follows RISC Zero's segment size, not M.
+
+The guest's rules are the same on both postures, so the 0.4 facts the design rests on are measured, not read: the configuration is readable in the step that spends, the vault moves only on the program's seed, the window is enforced by the state machine, and a private execute at M of 5 costs about 2M cycles of metered guest work and 16 minutes of proving on a desktop CPU.
+
+Files: `lez-tests/guests/rfp005_multisig_actor.rs`, `lez-tests/rfp005_actor.rs`, `patches/06-actor-model-spike.patch`, `scripts/setup-actor.sh`, `scripts/run-actor-spike.sh`, `logs/spike12-actor-*.log`.
 
 ## Reproducing
 
-Everything runs on LEZ v0.3.0 plus the four patches in `patches/`. You need Linux on x86_64, git, Rust through rustup (LEZ pins its toolchain), the RISC Zero toolchain at the versions we used, and about 10 GB of free memory for the real proofs.
+Everything runs on LEZ v0.3.0 plus the four patches in `patches/`, and section 9 on LEZ dev 7e3f7f7 plus the sixth. You need Linux on x86_64, git, Rust through rustup (LEZ pins its toolchain), the RISC Zero toolchain at the versions we used, and about 10 GB of free memory for the real proofs.
 
 ```
 scripts/setup.sh              # clones LEZ, makes a stock and an accelerated checkout, applies the patches
@@ -183,6 +236,8 @@ scripts/run-logic-tests.sh    # sections 4 and 5 and the whole-transaction shape
 scripts/run-real-proofs.sh    # every real proof in section 2, about two and a half hours on 16 threads
 scripts/run-lez-ppe-bench.sh  # LEZ's own privacy-circuit benchmark at 2811d0601 and v0.3.0, for comparison
 scripts/setup-testnet.sh      # a LEZ v0.3.1 checkout with the driver, wallet and guest for section 2's public-testnet run
+scripts/setup-actor.sh        # a LEZ dev checkout at 7e3f7f7 with the actor-model patch, for section 9
+scripts/run-actor-spike.sh    # section 9: the public-path counts in dev mode, then its real proofs, about an hour on 16 threads
 ```
 
 The RISC Zero toolchain, after `curl -L https://risczero.com/install | bash`:

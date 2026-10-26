@@ -1,0 +1,28 @@
+   Compiling test_methods v0.1.0 (<lez-checkout>/lee/state_machine/test_methods)
+warning: lee@0.1.0: Generated module at <lez-checkout>/target/release/build/lee-e36087980e368768/out/lee/privacy_preserving_circuit/mod.rs
+   Compiling lee v0.1.0 (<lez-checkout>/lee/state_machine)
+    Finished `release` profile [optimized] target(s) in 7.06s
+     Running unittests src/lib.rs (target/release/deps/lee-59a31887c5b46d37)
+
+running 4 tests
+test state::tests::rfp005_actor::rfp005_actor_private_execute ... ignored, real proving, run explicitly without RISC0_DEV_MODE
+test state::tests::rfp005_actor::rfp005_actor_public_ceiling ... RFP005-0.4 public per_signature=283353 base=7447 predicted_ceiling=33
+RFP005-0.4 public ceiling M=33 cycles=9926290 share_of_10M=99.3% M=34 fails: OutOfGas { budget: 10000000 }
+ok
+test state::tests::rfp005_actor::rfp005_actor_public_curve ... RFP005-0.4 public M=1 signatures=3 cycles=863472 share_of_10M=8.6%
+RFP005-0.4 public M=5 signatures=7 cycles=1990954 share_of_10M=19.9%
+RFP005-0.4 public M=10 signatures=12 cycles=3418526 share_of_10M=34.2%
+RFP005-0.4 public M=20 signatures=22 cycles=6235343 share_of_10M=62.4%
+RFP005-0.4 public M=30 signatures=32 cycles=9097768 share_of_10M=91.0%
+ok
+test state::tests::rfp005_actor::rfp005_actor_public_refusals ... 
+thread 'main' (1) panicked at lee/state_machine/test_methods/guest/src/bin/rfp005_multisig_actor.rs:90:13:
+below threshold
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+RFP005-0.4 public below threshold: Some(ProgramExecutionFailed("Guest panicked: below threshold"))
+RFP005-0.4 public outside its window: Some(OutOfValidityWindow)
+RFP005-0.4 public vault debit without the seed: Some(InvalidProgramBehavior(NativeTransferFailed(UnauthorizedSender { account_id: CBTvLWwsz12qt1D9fPPx7kns95nNHD7MuyFbfCukSzYd })))
+ok
+
+test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 292 filtered out; finished in 3.36s
+
