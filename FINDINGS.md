@@ -168,7 +168,7 @@ Files: `chat/spike4.sh`, `chat/spike8.md`, `chat/decode-capture.py`, `logs/spike
 | A program header can be immutable, and a mutable one can be replaced by its key holder | `lez/programs/program_loader/core/src/lib.rs` | Immutable deployment |
 | The chat module has no remove call, starts a new installation on every init, keeps older groups as read-only history, reads back the newest 500 messages after a restart, and a member sees only messages from after they joined | `rust-lib/chat_module.lidl`, chat module interface commit a83ed21a3 | Reconciliation, re-invite and re-posting |
 
-On LEZ dev at 7e3f7f7, the 0.4 line, the two-phase row gives way to the actor model and the private execution is metered at the 32M default, while the cap, the fee classification and the signature scheme hold, see section 9.
+On LEZ dev at 7e3f7f7, the 0.4 line, the two-phase row gives way to the actor model, while the cap, the fee classification, the private path's missing cycle cap and the signature scheme hold, see section 9.
 
 Between v0.3.0 and v0.3.1 nothing changed in the state machine core, the private transaction code, the signatures, the circuit artifact, the fee classification, the block settings or the program loader, and the bumped logos-blockchain pin keeps the 2 MiB block.
 
@@ -200,7 +200,7 @@ Refusals, each from the state machine: four approvals for a threshold of five, `
 
 ### Private posture, real proofs
 
-The configuration and the vault are private PDAs bound to the program under the member group's keys, and the execute is the root call to the configuration's actor. A private PDA at the root runs unauthorized, as LEZ's own tests have it, and the approvals are the authority. The payout goes to a new private account, as in section 2, or to a public account. On dev the host-side simulation meters the private execution at the 32M default (`handle_message_metered` in `lee/state_machine/src/privacy_preserving_transaction/circuit/mod.rs`), so a private execute has a cycle bound now, far above anything here. In dev mode both shapes settle inside their window and are refused outside it with `OutOfValidityWindow` (`logs/spike12-actor-private-dev-*.log`).
+The configuration and the vault are private PDAs bound to the program under the member group's keys, and the execute is the root call to the configuration's actor. A private PDA at the root runs unauthorized, as LEZ's own tests have it, and the approvals are the authority. The payout goes to a new private account, as in section 2, or to a public account. On dev a private transition still runs with no cycle bound, and only the public transitions of a private transaction are metered, at the 32M default (`handle_message` with `Cycles::MAX` against `handle_message_metered` in `lee/state_machine/src/privacy_preserving_transaction/circuit/mod.rs`). In dev mode both shapes settle inside their window and are refused outside it with `OutOfValidityWindow` (`logs/spike12-actor-private-dev-*.log`).
 
 Each row is one execute proved for real on 16 threads and then settled by the 0.4 state machine, inside its window, and refused outside it with `OutOfValidityWindow`. Peak memory was between 9,610,020 and 9,617,804 KiB, about 9.2 GiB, in every run, as on v0.3.0.
 
@@ -219,7 +219,7 @@ What the curve says:
 - A payout to a public account instead of a new private one saves one private note and about two minutes, in line with section 2's three minutes per private account consumed or written.
 - A member's machine still needs about 10 GB of free memory, and peak memory still follows RISC Zero's segment size, not M.
 
-The guest's rules are the same on both postures, so the 0.4 facts the design rests on are measured, not read: the configuration is readable in the step that spends, the vault moves only on the program's seed, the window is enforced by the state machine, and a private execute at M of 5 costs about 2M cycles of metered guest work and 16 minutes of proving on a desktop CPU.
+The guest's rules are the same on both postures, so the 0.4 facts the design rests on are measured, not read: the configuration is readable in the step that spends, the vault moves only on the program's seed, the window is enforced by the state machine, and a private execute at M of 5 costs about 2M cycles of guest work and 16 minutes of proving on a desktop CPU.
 
 Files: `lez-tests/guests/rfp005_multisig_actor.rs`, `lez-tests/rfp005_actor.rs`, `patches/06-actor-model-spike.patch`, `scripts/setup-actor.sh`, `scripts/run-actor-spike.sh`, `logs/spike12-actor-*.log`.
 
